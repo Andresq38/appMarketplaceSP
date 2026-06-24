@@ -24,7 +24,7 @@ export class EspecialidadController {
     actualizar = async (request: Request, response: Response, next: NextFunction) => {
         const id = parseId(request.params.id);
         const especialidad = await especialidadService.actualizar(id, request.body);
-        return sendSuccess(response, especialidad, "Especialidad actualizada correctamente", StatusCodes.OK);
+        return sendSuccess(response, especialidad, "Especialidad actualizada correctamente", StatusCodes.OK); 
     };
 
     eliminar = async (request: Request, response: Response, next: NextFunction) => {
