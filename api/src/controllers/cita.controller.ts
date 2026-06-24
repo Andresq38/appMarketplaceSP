@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from "http-status-codes";
 import { sendSuccess } from '../utils/http-response';
 import { parseId } from '../utils/parse-id';
-import { citaService } from '../services/cita.service';
+import { citaService } from '../services/cita.service'; 
 
 export class CitaController {
     listar = async (request: Request, response: Response, next: NextFunction) => {
