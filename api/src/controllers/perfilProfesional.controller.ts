@@ -1,135 +1,41 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from "http-status-codes";
+import { sendSuccess } from '../utils/http-response';
+import { parseId } from '../utils/parse-id';
 import { perfilProfesionalService } from '../services/perfilProfesional.service';
 
 export class PerfilProfesionalController {
     listar = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const perfiles = await perfilProfesionalService.listar();
-
-            return response.status(StatusCodes.OK).json({
-                success: true,
-                data: perfiles,
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const perfiles = await perfilProfesionalService.listar();
+        return sendSuccess(response, perfiles, "Perfiles profesionales listados correctamente", StatusCodes.OK);
     };
 
     obtenerPorId = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const { id } = request.params;
-            const perfil = await perfilProfesionalService.obtenerPorId(id);
-
-            if (!perfil) {
-                return response.status(StatusCodes.NOT_FOUND).json({
-                    success: false,
-                    message: "Perfil profesional no encontrado",
-                });
-            }
-
-            return response.status(StatusCodes.OK).json({
-                success: true,
-                data: perfil,
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const id = parseId(request.params.id);
+        const perfil = await perfilProfesionalService.obtenerPorId(id);
+        return sendSuccess(response, perfil, "Perfil profesional obtenido correctamente", StatusCodes.OK);
     };
 
-    obtenerPorUsuario = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const { usuarioId } = request.params;
-            const perfil = await perfilProfesionalService.obtenerPorUsuarioId(usuarioId);
-
-            if (!perfil) {
-                return response.status(StatusCodes.NOT_FOUND).json({
-                    success: false,
-                    message: "Perfil profesional no encontrado para este usuario",
-                });
-            }
-
-            return response.status(StatusCodes.OK).json({
-                success: true,
-                data: perfil,
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+    obtenerPorUsuarioId = async (request: Request, response: Response, next: NextFunction) => {
+        const usuarioId = parseId(request.params.usuarioId);
+        const perfil = await perfilProfesionalService.obtenerPorUsuarioId(usuarioId);
+        return sendSuccess(response, perfil, "Perfil profesional del usuario obtenido correctamente", StatusCodes.OK);
     };
 
     crear = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const { usuarioId, titulo, descripcion, aniosExperiencia, modalidad, provincia, canton, distrito, tarifaBase } = request.body;
-
-            const nuevoPerfil = await perfilProfesionalService.crear({
-                usuarioId,
-                titulo,
-                descripcion,
-                aniosExperiencia,
-                modalidad,
-                provincia,
-                canton,
-                distrito,
-                tarifaBase,
-                disponible: true,
-                activo: true,
-            });
-
-            return response.status(StatusCodes.CREATED).json({
-                success: true,
-                data: nuevoPerfil,
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const perfil = await perfilProfesionalService.crear(request.body);
+        return sendSuccess(response, perfil, "Perfil profesional creado correctamente", StatusCodes.CREATED);
     };
 
     actualizar = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const { id } = request.params;
-            const { titulo, descripcion, aniosExperiencia, modalidad, provincia, canton, distrito, tarifaBase, disponible, activo } = request.body;
-
-            const perfilActualizado = await perfilProfesionalService.actualizar(id, {
-                titulo,
-                descripcion,
-                aniosExperiencia,
-                modalidad,
-                provincia,
-                canton,
-                distrito,
-                tarifaBase,
-                disponible,
-                activo,
-            });
-
-            return response.status(StatusCodes.OK).json({
-                success: true,
-                data: perfilActualizado,
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const id = parseId(request.params.id);
+        const perfil = await perfilProfesionalService.actualizar(id, request.body);
+        return sendSuccess(response, perfil, "Perfil profesional actualizado correctamente", StatusCodes.OK);
     };
 
     eliminar = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const { id } = request.params;
-
-            await perfilProfesionalService.eliminar(id);
-
-            return response.status(StatusCodes.OK).json({
-                success: true,
-                message: "Perfil profesional eliminado correctamente",
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const id = parseId(request.params.id);
+        await perfilProfesionalService.eliminar(id);
+        return sendSuccess(response, null, "Perfil profesional eliminado correctamente", StatusCodes.OK);
     };
 }

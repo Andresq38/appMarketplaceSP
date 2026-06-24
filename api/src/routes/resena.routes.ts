@@ -1,27 +1,28 @@
 import { Router } from "express";
 import { asyncHandler } from "../middlewares/async-handler.middleware";
 import { validateRequest } from "../middlewares/validate-request.middleware";
-import { createCitaSchema, updateCitaSchema } from "../dtos/cita.dto";
-import { CitaController } from "../controllers/cita.controller";
+import { createResenaSchema, updateResenaSchema } from "../dtos/resena.dto";
+import { ResenaController } from "../controllers/resena.controller";
 
-export class CitaRoutes {
+export class ResenaRoutes {
     static get routes(): Router {
         const router = Router();
-        const controller = new CitaController();
+        const controller = new ResenaController();
 
-        // localhost:3000/api/cita/
+        // localhost:3000/api/resena/
         router.get("/", asyncHandler(controller.listar));
-        router.get("/cliente/:clienteId", asyncHandler(controller.obtenerPorClienteId));
+        router.get("/cita/:citaId", asyncHandler(controller.obtenerPorCitaId));
         router.get("/profesional/:perfilProfesionalId", asyncHandler(controller.obtenerPorProfesionalId));
+        router.get("/cliente/:clienteId", asyncHandler(controller.obtenerPorClienteId));
         router.get("/:id", asyncHandler(controller.obtenerPorId));
         router.post(
             "/",
-            validateRequest(createCitaSchema),
+            validateRequest(createResenaSchema),
             asyncHandler(controller.crear)
         );
         router.put(
             "/:id",
-            validateRequest(updateCitaSchema),
+            validateRequest(updateResenaSchema),
             asyncHandler(controller.actualizar)
         );
         router.delete("/:id", asyncHandler(controller.eliminar));

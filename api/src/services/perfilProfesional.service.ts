@@ -1,62 +1,202 @@
 import { prisma } from "../config/prisma";
+import { AppError } from "../utils/app-error";
+import { CreatePerfilProfesionalDto, UpdatePerfilProfesionalDto } from "../dtos/perfil-profesional.dto";
 
 export const perfilProfesionalService = {
+    // Utilidades
+    async validateUsuario(usuarioId: number) {
+        const usuario = await prisma.usuario.findUnique({
+            where: { id: usuarioId },
+        });
+
+        if (!usuario) {
+            throw AppError.badRequest("El usuario indicado no existe");
+        }
+    },
+
+    async validateEspecialidades(especialidadIds: number[]) {
+        const count = await prisma.especialidad.count({
+            where: {
+                id: {
+                    in: especialidadIds,
+                },
+            },
+        });
+
+        if (count !== especialidadIds.length) {
+            throw AppError.badRequest("Una o más especialidades no existen");
+        }
+    },
+
     async listar() {
         return await prisma.perfilProfesional.findMany({
             include: {
                 usuario: true,
                 servicios: true,
-                especialidades: true,
+                especialidades: {
+                    include: {
+                        especialidad: true,
+                    },
+                },
             },
         });
     },
 
-    async obtenerPorId(id: string) {
-        return await prisma.perfilProfesional.findUnique({
+    async obtenerPorId(id: number) {
+        const perfil = await prisma.perfilProfesional.findUnique({
             where: { id },
             include: {
                 usuario: true,
                 servicios: true,
-                especialidades: true,
+                especialidades: {
+                    include: {
+                        especialidad: true,
+                    },
+                },
             },
         });
+
+        if (!perfil) {
+            throw AppError.notFound("Perfil profesional no encontrado");
+        }
+
+        return perfil;
     },
 
-    async obtenerPorUsuarioId(usuarioId: string) {
-        return await prisma.perfilProfesional.findUnique({
+    async obtenerPorUsuarioId(usuarioId: number) {
+        const perfil = await prisma.perfilProfesional.findUnique({
             where: { usuarioId },
             include: {
                 usuario: true,
                 servicios: true,
-                especialidades: true,
+                especialidades: {
+                    include: {
+                        especialidad: true,
+                    },
+                },
             },
         });
+
+        if (!perfil) {
+            throw AppError.notFound("Perfil profesional no encontrado");
+        }
+
+        return perfil;
     },
 
-    async crear(data: any) {
+    async crear(data: CreatePerfilProfesionalDto) {
+        // Validar relaciones
+        await this.validateUsuario(data.usuarioId);
+
+        if (data.especialidadIds && data.especialidadIds.length > 0) {
+            await this.validateEspecialidades(data.especialidadIds);
+        }
+
+        // Validar que el usuario no tenga ya un perfil
+        const perfilExistente = await prisma.perfilProfesional.findUnique({
+            where: { usuarioId: data.usuarioId },
+        });
+
+        if (perfilExistente) {
+            throw AppError.conflict("El usuario ya tiene un perfil profesional");
+        }
+
         return await prisma.perfilProfesional.create({
-            data,
+            data: {
+                usuarioId: data.usuarioId,
+                titulo: data.titulo,
+                descripcion: data.descripcion,
+                aniosExperiencia: data.aniosExperiencia,
+                modalidad: data.modalidad,
+                provincia: data.provincia,
+                canton: data.canton,
+                distrito: data.distrito,
+                tarifaBase: data.tarifaBase,
+                imagen: data.imagen,
+                disponible: true,
+                activo: true,
+                especialidades: data.especialidadIds
+                    ? {
+                        create: data.especialidadIds.map((id) => ({
+                            especialidadId: id,
+                        })),
+                    }
+                    : undefined,
+            },
             include: {
                 usuario: true,
                 servicios: true,
-                especialidades: true,
+                especialidades: {
+                    include: {
+                        especialidad: true,
+                    },
+                },
             },
         });
     },
 
-    async actualizar(id: string, data: any) {
+    async actualizar(id: number, data: UpdatePerfilProfesionalDto) {
+        // Validar que el perfil exista
+        const perfil = await prisma.perfilProfesional.findUnique({
+            where: { id },
+        });
+
+        if (!perfil) {
+            throw AppError.notFound("Perfil profesional no encontrado");
+        }
+
+        // Validar especialidades si se actualizan
+        if (data.especialidadIds) {
+            if (data.especialidadIds.length > 0) {
+                await this.validateEspecialidades(data.especialidadIds);
+            }
+        }
+
         return await prisma.perfilProfesional.update({
             where: { id },
-            data,
+            data: {
+                titulo: data.titulo,
+                descripcion: data.descripcion,
+                aniosExperiencia: data.aniosExperiencia,
+                modalidad: data.modalidad,
+                provincia: data.provincia,
+                canton: data.canton,
+                distrito: data.distrito,
+                tarifaBase: data.tarifaBase,
+                imagen: data.imagen,
+                disponible: data.disponible,
+                activo: data.activo,
+                especialidades: data.especialidadIds
+                    ? {
+                        deleteMany: {},
+                        create: data.especialidadIds.map((id) => ({
+                            especialidadId: id,
+                        })),
+                    }
+                    : undefined,
+            },
             include: {
                 usuario: true,
                 servicios: true,
-                especialidades: true,
+                especialidades: {
+                    include: {
+                        especialidad: true,
+                    },
+                },
             },
         });
     },
 
-    async eliminar(id: string) {
+    async eliminar(id: number) {
+        // Validar que el perfil exista
+        const perfil = await prisma.perfilProfesional.findUnique({
+            where: { id },
+        });
+
+        if (!perfil) {
+            throw AppError.notFound("Perfil profesional no encontrado");
+        }
+
         return await prisma.perfilProfesional.delete({
             where: { id },
         });

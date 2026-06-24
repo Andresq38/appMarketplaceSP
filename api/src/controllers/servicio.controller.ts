@@ -1,121 +1,47 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from "http-status-codes";
+import { sendSuccess } from '../utils/http-response';
+import { parseId } from '../utils/parse-id';
 import { servicioService } from '../services/servicio.service';
 
 export class ServicioController {
     listar = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const servicios = await servicioService.listar();
-
-            return response.status(StatusCodes.OK).json({
-                success: true,
-                data: servicios,
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const servicios = await servicioService.listar();
+        return sendSuccess(response, servicios, "Servicios listados correctamente", StatusCodes.OK);
     };
 
     obtenerPorId = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const { id } = request.params;
-            const servicio = await servicioService.obtenerPorId(id);
-
-            if (!servicio) {
-                return response.status(StatusCodes.NOT_FOUND).json({
-                    success: false,
-                    message: "Servicio no encontrado",
-                });
-            }
-
-            return response.status(StatusCodes.OK).json({
-                success: true,
-                data: servicio,
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const id = parseId(request.params.id);
+        const servicio = await servicioService.obtenerPorId(id);
+        return sendSuccess(response, servicio, "Servicio obtenido correctamente", StatusCodes.OK);
     };
 
-    obtenerPorPerfil = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const { perfilId } = request.params;
-            const servicios = await servicioService.obtenerPorPerfil(perfilId);
+    obtenerPorPerfilId = async (request: Request, response: Response, next: NextFunction) => {
+        const perfilId = parseId(request.params.perfilId);
+        const servicios = await servicioService.obtenerPorPerfilId(perfilId);
+        return sendSuccess(response, servicios, "Servicios del perfil obtenidos correctamente", StatusCodes.OK);
+    };
 
-            return response.status(StatusCodes.OK).json({
-                success: true,
-                data: servicios,
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+    obtenerPorCategoriaId = async (request: Request, response: Response, next: NextFunction) => {
+        const categoriaId = parseId(request.params.categoriaId);
+        const servicios = await servicioService.obtenerPorCategoriaId(categoriaId);
+        return sendSuccess(response, servicios, "Servicios de la categoría obtenidos correctamente", StatusCodes.OK);
     };
 
     crear = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const { perfilId, categoriaId, nombre, descripcion, precio, duracionMinutos, modalidad } = request.body;
-
-            const nuevoServicio = await servicioService.crear({
-                perfilId,
-                categoriaId,
-                nombre,
-                descripcion,
-                precio,
-                duracionMinutos,
-                modalidad,
-                estado: true,
-            });
-
-            return response.status(StatusCodes.CREATED).json({
-                success: true,
-                data: nuevoServicio,
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const servicio = await servicioService.crear(request.body);
+        return sendSuccess(response, servicio, "Servicio creado correctamente", StatusCodes.CREATED);
     };
 
     actualizar = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const { id } = request.params;
-            const { nombre, descripcion, precio, duracionMinutos, modalidad, estado } = request.body;
-
-            const servicioActualizado = await servicioService.actualizar(id, {
-                nombre,
-                descripcion,
-                precio,
-                duracionMinutos,
-                modalidad,
-                estado,
-            });
-
-            return response.status(StatusCodes.OK).json({
-                success: true,
-                data: servicioActualizado,
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const id = parseId(request.params.id);
+        const servicio = await servicioService.actualizar(id, request.body);
+        return sendSuccess(response, servicio, "Servicio actualizado correctamente", StatusCodes.OK);
     };
 
     eliminar = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const { id } = request.params;
-
-            await servicioService.eliminar(id);
-
-            return response.status(StatusCodes.OK).json({
-                success: true,
-                message: "Servicio eliminado correctamente",
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const id = parseId(request.params.id);
+        await servicioService.eliminar(id);
+        return sendSuccess(response, null, "Servicio eliminado correctamente", StatusCodes.OK);
     };
 }

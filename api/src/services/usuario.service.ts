@@ -1,54 +1,173 @@
 import { prisma } from "../config/prisma";
+import { AppError } from "../utils/app-error";
+import { CreateUsuarioDto, UpdateUsuarioDto } from "../dtos/usuario.dto";
 
 export const usuarioService = {
-    async listar() {
-        return await prisma.usuario.findMany();
+    // Utilidades
+    async validateUsuario(usuarioId: number) {
+        const usuario = await prisma.usuario.findUnique({
+            where: { id: usuarioId },
+        });
+
+        if (!usuario) {
+            throw AppError.badRequest("El usuario indicado no existe");
+        }
     },
 
-    async obtenerPorId(id: string) {
-        return await prisma.usuario.findUnique({
-            where: { id },
+    async validateEmail(email: string, usuarioIdExcluir?: number) {
+        const usuario = await prisma.usuario.findUnique({
+            where: { email },
         });
+
+        if (usuario && (!usuarioIdExcluir || usuario.id !== usuarioIdExcluir)) {
+            throw AppError.conflict("El email ya está registrado");
+        }
+    },
+
+    async listar() {
+        return await prisma.usuario.findMany({
+            select: {
+                id: true,
+                nombre: true,
+                apellidos: true,
+                email: true,
+                telefono: true,
+                rol: true,
+                estado: true,
+                createdAt: true,
+                updatedAt: true,
+                perfilProfesional: true,
+                password: false,
+            },
+        });
+    },
+
+    async obtenerPorId(id: number) {
+        const usuario = await prisma.usuario.findUnique({
+            where: { id },
+            select: {
+                id: true,
+                nombre: true,
+                apellidos: true,
+                email: true,
+                telefono: true,
+                rol: true,
+                estado: true,
+                createdAt: true,
+                updatedAt: true,
+                perfilProfesional: true,
+                password: false,
+            },
+        });
+
+        if (!usuario) {
+            throw AppError.notFound("Usuario no encontrado");
+        }
+
+        return usuario;
     },
 
     async obtenerPorEmail(email: string) {
         return await prisma.usuario.findUnique({
             where: { email },
+            select: {
+                id: true,
+                nombre: true,
+                apellidos: true,
+                email: true,
+                telefono: true,
+                rol: true,
+                estado: true,
+                createdAt: true,
+                updatedAt: true,
+                perfilProfesional: true,
+                password: false,
+            },
         });
     },
 
-    async crear(data: {
-        nombre: string;
-        apellidos: string;
-        email: string;
-        password: string;
-        telefono: string;
-        rol: string;
-    }) {
+    async crear(data: CreateUsuarioDto) {
+        // Validar que el email sea único
+        await this.validateEmail(data.email);
+
         return await prisma.usuario.create({
-            data,
+            data: {
+                nombre: data.nombre,
+                apellidos: data.apellidos,
+                email: data.email,
+                password: data.password,
+                telefono: data.telefono,
+                rol: data.rol,
+                estado: true,
+            },
+            select: {
+                id: true,
+                nombre: true,
+                apellidos: true,
+                email: true,
+                telefono: true,
+                rol: true,
+                estado: true,
+                createdAt: true,
+                updatedAt: true,
+                perfilProfesional: true,
+                password: false,
+            },
         });
     },
 
-    async actualizar(
-        id: string,
-        data: {
-            nombre?: string;
-            apellidos?: string;
-            email?: string;
-            password?: string;
-            telefono?: string;
-            rol?: string;
-            estado?: boolean;
+    async actualizar(id: number, data: UpdateUsuarioDto) {
+        // Validar que el usuario exista
+        const usuario = await prisma.usuario.findUnique({
+            where: { id },
+        });
+
+        if (!usuario) {
+            throw AppError.notFound("Usuario no encontrado");
         }
-    ) {
+
+        // Validar email único si se actualiza
+        if (data.email && data.email !== usuario.email) {
+            await this.validateEmail(data.email, id);
+        }
+
         return await prisma.usuario.update({
             where: { id },
-            data,
+            data: {
+                nombre: data.nombre,
+                apellidos: data.apellidos,
+                email: data.email,
+                password: data.password,
+                telefono: data.telefono,
+                rol: data.rol,
+                estado: data.estado,
+            },
+            select: {
+                id: true,
+                nombre: true,
+                apellidos: true,
+                email: true,
+                telefono: true,
+                rol: true,
+                estado: true,
+                createdAt: true,
+                updatedAt: true,
+                perfilProfesional: true,
+                password: false,
+            },
         });
     },
 
-    async eliminar(id: string) {
+    async eliminar(id: number) {
+        // Validar que el usuario exista
+        const usuario = await prisma.usuario.findUnique({
+            where: { id },
+        });
+
+        if (!usuario) {
+            throw AppError.notFound("Usuario no encontrado");
+        }
+
         return await prisma.usuario.delete({
             where: { id },
         });

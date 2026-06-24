@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import { AppRoutes } from "./routes/routes";
+import { ErrorMiddleware } from "./middlewares/error.middleware";
 
 const app = express();
 // Acceder a la configuracion del archivo .env
@@ -26,9 +27,10 @@ app.get("/", (req, res) => {
     });
 });
 //---- Definir rutas ----
-app.use(AppRoutes.routes)
+app.use("/api", AppRoutes.routes);
 
-// Handle errors middleware
+// ---- Middleware de manejo de errores global ----
+app.use(ErrorMiddleware.handleError);
 
 //Acceso a las imágenes
 

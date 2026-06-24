@@ -1,96 +1,35 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from "http-status-codes";
+import { sendSuccess } from '../utils/http-response';
+import { parseId } from '../utils/parse-id';
 import { especialidadService } from '../services/especialidad.service';
 
 export class EspecialidadController {
     listar = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const especialidades = await especialidadService.listar();
-
-            return response.status(StatusCodes.OK).json({
-                success: true,
-                data: especialidades,
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const especialidades = await especialidadService.listar();
+        return sendSuccess(response, especialidades, "Especialidades listadas correctamente", StatusCodes.OK);
     };
 
     obtenerPorId = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const { id } = request.params;
-            const especialidad = await especialidadService.obtenerPorId(id);
-
-            if (!especialidad) {
-                return response.status(StatusCodes.NOT_FOUND).json({
-                    success: false,
-                    message: "Especialidad no encontrada",
-                });
-            }
-
-            return response.status(StatusCodes.OK).json({
-                success: true,
-                data: especialidad,
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const id = parseId(request.params.id);
+        const especialidad = await especialidadService.obtenerPorId(id);
+        return sendSuccess(response, especialidad, "Especialidad obtenida correctamente", StatusCodes.OK);
     };
 
     crear = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const { nombre, descripcion } = request.body;
-
-            const nuevoEspecialidad = await especialidadService.crear({
-                nombre,
-                descripcion,
-            });
-
-            return response.status(StatusCodes.CREATED).json({
-                success: true,
-                data: nuevoEspecialidad,
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const especialidad = await especialidadService.crear(request.body);
+        return sendSuccess(response, especialidad, "Especialidad creada correctamente", StatusCodes.CREATED);
     };
 
     actualizar = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const { id } = request.params;
-            const { nombre, descripcion } = request.body;
-
-            const especialidadActualizada = await especialidadService.actualizar(id, {
-                nombre,
-                descripcion,
-            });
-
-            return response.status(StatusCodes.OK).json({
-                success: true,
-                data: especialidadActualizada,
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const id = parseId(request.params.id);
+        const especialidad = await especialidadService.actualizar(id, request.body);
+        return sendSuccess(response, especialidad, "Especialidad actualizada correctamente", StatusCodes.OK);
     };
 
     eliminar = async (request: Request, response: Response, next: NextFunction) => {
-        try {
-            const { id } = request.params;
-
-            await especialidadService.eliminar(id);
-
-            return response.status(StatusCodes.OK).json({
-                success: true,
-                message: "Especialidad eliminada correctamente",
-            });
-        } catch (error) {
-            console.error(error);
-            next(error);
-        }
+        const id = parseId(request.params.id);
+        await especialidadService.eliminar(id);
+        return sendSuccess(response, null, "Especialidad eliminada correctamente", StatusCodes.OK);
     };
 }
