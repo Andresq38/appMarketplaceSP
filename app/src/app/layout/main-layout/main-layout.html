@@ -1,0 +1,18 @@
+<div class="app-shell">
+  <app-header
+    [publicMenu]="publicMenu()"
+    [clientMenu]="clientMenu()"
+    [profesionalMenu]="profesionalMenu()"
+    [adminMenu]="adminMenu()"
+    [currentUser]="currentUser()"
+    [canShowItem]="canShowItem.bind(this)"
+    (loginCliente)="loginAsCliente()"
+    (loginProfesional)="loginAsProfesional()"
+    (loginAdmin)="loginAsAdmin()"
+    (logoutUser)="logout()"
+  />
+  <main class="content">
+    <router-outlet />
+  </main>
+  <app-footer />
+</div>

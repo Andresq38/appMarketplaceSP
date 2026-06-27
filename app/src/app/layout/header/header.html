@@ -1,0 +1,138 @@
+<header class="site-header">
+    <mat-toolbar class="toolbar">
+        <a class="brand" routerLink="/">
+            <span class="brand-icon">
+                <mat-icon>medical_services</mat-icon>
+            </span>
+            <span class="brand-text">
+                <strong>HealthHub</strong>
+                <small>Plataforma de servicios profesionales de salud y gestión de citas</small>
+            </span>
+        </a>
+        <nav class="desktop-nav">
+            @for (item of publicMenu(); track item.path) {
+            @if (canShowItem()(item)) {
+            <a mat-button [routerLink]="item.path" routerLinkActive="active-link"
+                [routerLinkActiveOptions]="{ exact: item.path === '/' }">
+                <mat-icon>{{ item.icon }}</mat-icon>
+                {{ item.label }}
+            </a>
+            }
+            }
+            @if (currentUser(); as user) {
+                @switch (user.role) {
+                    @case ('CLIENTE') {
+                        <button mat-button [matMenuTriggerFor]="clienteMenuTemplate">
+                            <mat-icon>person</mat-icon>
+                            Mi Cuenta
+                        </button>
+                    }
+                    @case ('PROFESIONAL') {
+                        <button mat-button [matMenuTriggerFor]="profesionalMenuTemplate">
+                            <mat-icon>work</mat-icon>
+                            Mi Perfil
+                        </button>
+                    }
+                    @case ('ADMIN') {
+                        <button mat-button [matMenuTriggerFor]="adminMenuTemplate">
+                            <mat-icon>admin_panel_settings</mat-icon>
+                            Administración
+                        </button>
+                    }
+                }
+            }
+        </nav>
+        <span class="spacer"></span>
+        @if (currentUser(); as user) {
+        <div class="user-chip">
+            <mat-icon>person_circle</mat-icon>
+            <span>{{ user.nombre }} {{ user.apellidos }}</span>
+        </div>
+        <button mat-flat-button color="primary" (click)="logoutUser.emit()">
+            Cerrar sesión
+        </button>
+        } @else {
+        <button mat-stroked-button color="primary" (click)="loginCliente.emit()">
+            Cliente demo
+        </button>
+        <button mat-stroked-button color="accent" (click)="loginProfesional.emit()">
+            Profesional demo
+        </button>
+        <button mat-flat-button color="primary" (click)="loginAdmin.emit()">
+            Admin demo
+        </button>
+        }
+        <button class="mobile-menu-button" mat-icon-button [matMenuTriggerFor]="mobileMenu">
+            <mat-icon>menu</mat-icon>
+        </button>
+    </mat-toolbar>
+</header>
+
+<mat-menu #clienteMenuTemplate="matMenu">
+    @for (item of clientMenu(); track item.path) {
+    <a mat-menu-item [routerLink]="item.path">
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span>{{ item.label }}</span>
+    </a>
+    }
+</mat-menu>
+
+<mat-menu #profesionalMenuTemplate="matMenu">
+    @for (item of profesionalMenu(); track item.path) {
+    <a mat-menu-item [routerLink]="item.path">
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span>{{ item.label }}</span>
+    </a>
+    }
+</mat-menu>
+
+<mat-menu #adminMenuTemplate="matMenu">
+    @for (item of adminMenu(); track item.path) {
+    <a mat-menu-item [routerLink]="item.path">
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span>{{ item.label }}</span>
+    </a>
+    }
+</mat-menu>
+
+<mat-menu #mobileMenu="matMenu">
+    @for (item of publicMenu(); track item.path) {
+    @if (canShowItem()(item)) {
+    <a mat-menu-item [routerLink]="item.path">
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span>{{ item.label }}</span>
+    </a>
+    }
+    }
+    @if (currentUser(); as user) {
+        @switch (user.role) {
+            @case ('CLIENTE') {
+                <mat-divider></mat-divider>
+                @for (item of clientMenu(); track item.path) {
+                <a mat-menu-item [routerLink]="item.path">
+                    <mat-icon>{{ item.icon }}</mat-icon>
+                    <span>{{ item.label }}</span>
+                </a>
+                }
+            }
+            @case ('PROFESIONAL') {
+                <mat-divider></mat-divider>
+                @for (item of profesionalMenu(); track item.path) {
+                <a mat-menu-item [routerLink]="item.path">
+                    <mat-icon>{{ item.icon }}</mat-icon>
+                    <span>{{ item.label }}</span>
+                </a>
+                }
+            }
+            @case ('ADMIN') {
+                <mat-divider></mat-divider>
+                @for (item of adminMenu(); track item.path) {
+                <a mat-menu-item [routerLink]="item.path">
+                    <mat-icon>{{ item.icon }}</mat-icon>
+                    <span>{{ item.label }}</span>
+                </a>
+                }
+            }
+        }
+    }
+</mat-menu>
