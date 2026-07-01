@@ -161,7 +161,7 @@ async function main() {
             tarifaBase: 120000,
             disponible: true,
             activo: true,
-            imagen: "patricia-molina.jpg",
+            imagen: "Medica1.png",
         },
     });
 
@@ -204,7 +204,7 @@ async function main() {
             tarifaBase: 90000,
             disponible: true,
             activo: true,
-            imagen: "alejandro-quesada.jpg",
+            imagen: "Dentista1.png",
         },
     });
 
@@ -247,7 +247,7 @@ async function main() {
             tarifaBase: 85000,
             disponible: true,
             activo: true,
-            imagen: "samantha-quesada.jpg",
+            imagen: "Psicologa1.png",
         },
     });
 
@@ -290,7 +290,7 @@ async function main() {
             tarifaBase: 75000,
             disponible: true,
             activo: true,
-            imagen: "jessie-quesada.jpg",
+            imagen: "Enfermera1.png",
         },
     });
 
@@ -333,7 +333,7 @@ async function main() {
             tarifaBase: 65000,
             disponible: true,
             activo: true,
-            imagen: "valeria-soto.jpg",
+            imagen: "Farmaceutica1.png",
         },
     });
 
