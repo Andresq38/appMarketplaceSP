@@ -1,0 +1,11 @@
+.admin-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+.admin-header .eyebrow { color: var(--mat-sys-primary); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+.admin-header h1 { margin: 0.35rem 0; font-size: clamp(1.8rem, 4vw, 2.6rem); }
+.admin-filters { display: grid; grid-template-columns: minmax(260px, 420px) auto; gap: 1rem; align-items: center; margin-bottom: 0.75rem; }
+.summary { margin: 0 0 1rem; font-weight: 600; opacity: 0.75; }
+.table-wrapper { overflow-x: auto; border-radius: 22px; border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 18%, transparent); background: var(--mat-sys-surface); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08); }
+.admin-table { width: 100%; min-width: 600px; }
+.admin-table th { font-weight: 700; color: var(--mat-sys-primary); background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent); }
+.admin-table td, .admin-table th { padding: 0.85rem 1rem; }
+.state { min-height: 260px; display: grid; place-items: center; text-align: center; opacity: 0.8; }
+.error { color: var(--mat-sys-error); }

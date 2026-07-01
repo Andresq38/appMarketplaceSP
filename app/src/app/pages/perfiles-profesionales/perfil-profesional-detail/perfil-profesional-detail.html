@@ -1,0 +1,140 @@
+<section class="detail-header">
+    <a mat-stroked-button routerLink="/perfiles-profesionales">
+        <mat-icon>arrow_back</mat-icon>
+        Volver
+    </a>
+</section>
+
+@if (loading()) {
+<div class="state">
+    <mat-spinner diameter="42" />
+    <p>Cargando detalle del profesional...</p>
+</div>
+} @else if (error()) {
+<div class="state error">
+    <mat-icon>error</mat-icon>
+    <p>{{ error() }}</p>
+</div>
+} @else if (perfil()) {
+<div class="detail-container">
+    <mat-card class="profile-card">
+        <div class="profile-header">
+            <div class="profile-image">
+                <img [src]="getImageUrl(perfil()?.imagen)" [alt]="perfil()?.usuario?.nombre" />
+                @if (perfil()?.disponible) {
+                <span class="availability available">Disponible</span>
+                } @else {
+                <span class="availability unavailable">No disponible</span>
+                }
+            </div>
+
+            <div class="profile-info">
+                <h1>{{ perfil()?.usuario?.nombre }} {{ perfil()?.usuario?.apellidos }}</h1>
+                <p class="titulo">{{ perfil()?.titulo }}</p>
+
+                <div class="contact-info">
+                    <div class="info-item">
+                        <mat-icon>email</mat-icon>
+                        <span>{{ perfil()?.usuario?.email }}</span>
+                    </div>
+                    <div class="info-item" *ngIf="perfil()?.usuario?.telefono">
+                        <mat-icon>phone</mat-icon>
+                        <span>{{ perfil()?.usuario?.telefono }}</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button mat-raised-button color="primary">
+                        <mat-icon>calendar_month</mat-icon>
+                        Agendar Cita
+                    </button>
+                    <button mat-stroked-button color="accent">
+                        <mat-icon>message</mat-icon>
+                        Contactar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <mat-divider class="divider"></mat-divider>
+
+        <div class="profile-details">
+            <section class="detail-section">
+                <h2>Sobre Mí</h2>
+                <p>{{ perfil()?.descripcion }}</p>
+            </section>
+
+            <mat-divider></mat-divider>
+
+            <section class="detail-section">
+                <h2>Información Profesional</h2>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <span class="label">Experiencia</span>
+                        <span class="value">{{ perfil()?.aniosExperiencia }} años</span>
+                    </div>
+                    <div class="info-box">
+                        <span class="label">Tarifa Base</span>
+                        <span class="value">₡{{ perfil()?.tarifaBase }} por consulta</span>
+                    </div>
+                    <div class="info-box">
+                        <span class="label">Modalidad</span>
+                        <div class="modalidad-badge">
+                            <mat-icon>{{ getModalidadIcon(perfil()?.modalidad ?? '') }}</mat-icon>
+                            <span>{{ perfil()?.modalidad }}</span>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <span class="label">Ubicación</span>
+                        <span class="value">{{ perfil()?.provincia }}, {{ perfil()?.canton }}, {{
+                            perfil()?.distrito }}</span>
+                    </div>
+                </div>
+            </section>
+
+            @if (perfil()?.especialidades && perfil()!.especialidades!.length > 0) {
+            <section class="detail-section">
+                <mat-divider></mat-divider>
+                <h2>Especialidades</h2>
+                <div class="chips">
+                    @for (esp of perfil()?.especialidades; track esp.id) {
+                    <mat-chip>
+                        <mat-icon matChipAvatar>star</mat-icon>
+                        {{ esp.nombre }}
+                    </mat-chip>
+                    }
+                </div>
+            </section>
+            }
+
+            @if (perfil()?.servicios && perfil()!.servicios!.length > 0) {
+            <section class="detail-section">
+                <mat-divider></mat-divider>
+                <h2>Servicios Ofrecidos</h2>
+                <div class="services-list">
+                    @for (servicio of perfil()?.servicios; track servicio.id) {
+                    <div class="service-item">
+                        <div class="service-header">
+                            <h3>{{ servicio.nombre }}</h3>
+                            <span class="price">₡{{ servicio.precio }}</span>
+                        </div>
+                        <p class="service-description">{{ servicio.descripcion }}</p>
+                        <div class="service-meta">
+                            <span class="duration">
+                                <mat-icon>schedule</mat-icon>
+                                {{ servicio.duracionMinutos }} min
+                            </span>
+                            <span class="modality">
+                                <mat-icon>{{ getModalidadIcon(servicio.modalidad) }}</mat-icon>
+                                {{ servicio.modalidad }}
+                            </span>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </section>
+            }
+        </div>
+    </mat-card>
+</div>
+}

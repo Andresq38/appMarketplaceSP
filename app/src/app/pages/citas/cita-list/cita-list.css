@@ -1,0 +1,3 @@
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+.state { min-height: 300px; display: grid; place-items: center; }
+.status { padding: 0.25rem 0.75rem; border-radius: 12px; background: color-mix(in srgb, var(--mat-sys-primary) 12%, transparent); color: var(--mat-sys-primary); }

@@ -1,0 +1,25 @@
+<a mat-stroked-button routerLink="/citas"><mat-icon>arrow_back</mat-icon>Volver</a>
+@if (loading()) { <div class="state"><mat-spinner diameter="42" /></div> }
+@else if (error()) { <div class="state error"><mat-icon>error</mat-icon></div> }
+@else if (cita()) {
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Detalle de Cita</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="info">
+            <span><strong>Profesional ID:</strong> {{ cita()?.profesionalId }}</span>
+            <span><strong>Cliente ID:</strong> {{ cita()?.clienteId }}</span>
+            <span><strong>Fecha:</strong> {{ cita()?.fecha | date }}</span>
+            <span><strong>Hora Inicio:</strong> {{ cita()?.horaInicio }}</span>
+            <span><strong>Hora Fin:</strong> {{ cita()?.horaFin }}</span>
+            <span><strong>Estado:</strong> {{ cita()?.estado }}</span>
+            <span><strong>Modalidad:</strong> {{ cita()?.modalidad }}</span>
+        </div>
+        @if (cita()?.descripcion) {
+        <mat-divider></mat-divider>
+        <p>{{ cita()?.descripcion }}</p>
+        }
+    </mat-card-content>
+</mat-card>
+}

@@ -2,115 +2,173 @@ import { Routes } from '@angular/router';
 import { MainLayout } from './layout/main-layout/main-layout';
 import { Home } from './pages/home/home';
 
+// Perfiles Profesionales
+import { PerfilProfesionalList } from './pages/perfiles-profesionales/perfil-profesional-list/perfil-profesional-list';
+import { PerfilProfesionalDetailPage } from './pages/perfiles-profesionales/perfil-profesional-detail/perfil-profesional-detail';
+import { PerfilProfesionalAdminList } from './pages/perfiles-profesionales/perfil-profesional-admin-list/perfil-profesional-admin-list';
+
+// Especialidades
+import { EspecialidadList } from './pages/especialidades/especialidad-list/especialidad-list';
+import { EspecialidadDetailPage } from './pages/especialidades/especialidad-detail/especialidad-detail';
+import { EspecialidadAdminList } from './pages/especialidades/especialidad-admin-list/especialidad-admin-list';
+
+// Servicios
+import { ServicioList } from './pages/servicios/servicio-list/servicio-list';
+import { ServicioDetailPage } from './pages/servicios/servicio-detail/servicio-detail';
+import { ServicioAdminList } from './pages/servicios/servicio-admin-list/servicio-admin-list';
+
+// Categorías
+import { CategoriaList } from './pages/categorias/categoria-list/categoria-list';
+import { CategoriaDetailPage } from './pages/categorias/categoria-detail/categoria-detail';
+import { CategoriaAdminList } from './pages/categorias/categoria-admin-list/categoria-admin-list';
+
+// Citas
+import { CitaList } from './pages/citas/cita-list/cita-list';
+import { CitaDetailPage } from './pages/citas/cita-detail/cita-detail';
+import { CitaAdminList } from './pages/citas/cita-admin-list/cita-admin-list';
+
+// Reseñas
+import { ResenaList } from './pages/resenas/resena-list/resena-list';
+import { ResenaDetailPage } from './pages/resenas/resena-detail/resena-detail';
+import { ResenaAdminList } from './pages/resenas/resena-admin-list/resena-admin-list';
+
+// Usuarios
+import { UsuarioList } from './pages/usuarios/usuario-list/usuario-list';
+import { UsuarioDetailPage } from './pages/usuarios/usuario-detail/usuario-detail';
+import { UsuarioAdminList } from './pages/usuarios/usuario-admin-list/usuario-admin-list';
+
 export const routes: Routes = [
     {
         path: '',
         component: MainLayout,
         children: [
-            {
-                path: '',
-                component: Home,
-                title: 'Inicio'
+            // Home
+            { 
+                path: '', 
+                component: Home, 
+                title: 'Inicio' 
             },
 
-            {
-                path: 'servicios',
-                component: Home, // TODO: Reemplazar con ServiciosList
-                title: 'Catálogo de Servicios'
+            // Perfiles Profesionales - Cliente
+            { 
+                path: 'perfiles-profesionales', 
+                component: PerfilProfesionalList, 
+                title: 'Catálogo de Profesionales' 
+            },
+            { 
+                path: 'perfiles-profesionales/:id', 
+                component: PerfilProfesionalDetailPage, 
+                title: 'Detalle del Profesional' 
             },
 
-            {
-                path: 'especialidades',
-                component: Home, // TODO: Reemplazar con EspecialidadesList
-                title: 'Especialidades'
+            // Especialidades
+            { 
+                path: 'especialidades', 
+                component: EspecialidadList, 
+                title: 'Especialidades' 
+            },
+            { 
+                path: 'especialidades/:id', 
+                component: EspecialidadDetailPage, 
+                title: 'Detalle de Especialidad' 
             },
 
-            {
-                path: 'profesionales',
-                component: Home, // TODO: Reemplazar con ProfesionalesList
-                title: 'Profesionales'
+            // Servicios
+            { 
+                path: 'servicios', 
+                component: ServicioList, 
+                title: 'Servicios' 
+            },
+            { 
+                path: 'servicios/:id', 
+                component: ServicioDetailPage, 
+                title: 'Detalle del Servicio' 
             },
 
-            // Rutas Cliente
-            {
-                path: 'cliente/citas',
-                component: Home, // TODO: Reemplazar con CitasClienteList
-                title: 'Mis Citas'
+            // Categorías
+            { 
+                path: 'categorias', 
+                component: CategoriaList, 
+                title: 'Categorías' 
+            },
+            { 
+                path: 'categorias/:id', 
+                component: CategoriaDetailPage, 
+                title: 'Detalle de Categoría' 
             },
 
-            {
-                path: 'cliente/resenas',
-                component: Home, // TODO: Reemplazar con ResenasList
-                title: 'Mis Reseñas'
+            // Citas
+            { 
+                path: 'citas', 
+                component: CitaList, 
+                title: 'Mis Citas' 
+            },
+            { 
+                path: 'citas/:id', 
+                component: CitaDetailPage, 
+                title: 'Detalle de Cita' 
             },
 
-            {
-                path: 'cliente/perfil',
-                component: Home, // TODO: Reemplazar con ClientePerfil
-                title: 'Mi Perfil'
+            // Reseñas
+            { 
+                path: 'resenas', 
+                component: ResenaList, 
+                title: 'Reseñas' 
+            },
+            { 
+                path: 'resenas/:id', 
+                component: ResenaDetailPage, 
+                title: 'Detalle de Reseña' 
             },
 
-            // Rutas Profesional
-            {
-                path: 'profesional/servicios',
-                component: Home, // TODO: Reemplazar con MisServiciosList
-                title: 'Mis Servicios'
+            // Usuarios
+            { 
+                path: 'usuarios', 
+                component: UsuarioList, 
+                title: 'Usuarios' 
+            },
+            { 
+                path: 'usuarios/:id', 
+                component: UsuarioDetailPage, 
+                title: 'Detalle de Usuario' 
             },
 
+            // Admin Routes
             {
-                path: 'profesional/citas',
-                component: Home, // TODO: Reemplazar con CitasProfesionalList
-                title: 'Mis Citas'
+                path: 'admin/perfiles-profesionales',
+                component: PerfilProfesionalAdminList,
+                title: 'Gestión de Profesionales'
             },
-
-            {
-                path: 'profesional/resenas',
-                component: Home, // TODO: Reemplazar con ResenasRecibidas
-                title: 'Reseñas Recibidas'
-            },
-
-            {
-                path: 'profesional/perfil',
-                component: Home, // TODO: Reemplazar con ProfesionalPerfil
-                title: 'Mi Perfil'
-            },
-
-            // Rutas Admin
-            {
-                path: 'admin/usuarios',
-                component: Home, // TODO: Reemplazar con UsuariosList
-                title: 'Gestión de Usuarios'
-            },
-
-            {
-                path: 'admin/categorias',
-                component: Home, // TODO: Reemplazar con CategoriasList
-                title: 'Gestión de Categorías'
-            },
-
             {
                 path: 'admin/especialidades',
-                component: Home, // TODO: Reemplazar con EspecialidadesAdminList
+                component: EspecialidadAdminList,
                 title: 'Gestión de Especialidades'
             },
-
             {
                 path: 'admin/servicios',
-                component: Home, // TODO: Reemplazar con ServiciosAdminList
+                component: ServicioAdminList,
                 title: 'Gestión de Servicios'
             },
-
+            {
+                path: 'admin/categorias',
+                component: CategoriaAdminList,
+                title: 'Gestión de Categorías'
+            },
             {
                 path: 'admin/citas',
-                component: Home, // TODO: Reemplazar con CitasAdminList
+                component: CitaAdminList,
                 title: 'Gestión de Citas'
             },
-
             {
-                path: 'admin/reportes',
-                component: Home, // TODO: Reemplazar con ReportesList
-                title: 'Reportes'
-            }
+                path: 'admin/resenas',
+                component: ResenaAdminList,
+                title: 'Gestión de Reseñas'
+            },
+            {
+                path: 'admin/usuarios',
+                component: UsuarioAdminList,
+                title: 'Gestión de Usuarios'
+            },
         ]
     },
     
@@ -118,4 +176,5 @@ export const routes: Routes = [
         path: '**',
         redirectTo: ''
     }
+];
 ];

@@ -1,0 +1,2 @@
+.state { min-height: 300px; display: grid; place-items: center; }
+mat-card { margin-top: 1rem; }

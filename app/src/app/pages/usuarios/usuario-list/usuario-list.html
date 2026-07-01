@@ -1,0 +1,30 @@
+<h1>Usuarios</h1>
+<mat-form-field appearance="outline">
+    <mat-label>Buscar usuario</mat-label>
+    <input matInput [(ngModel)]="search" />
+    <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>
+<button mat-stroked-button (click)="clearFilters()">Limpiar</button>
+<p>{{ totalUsuarios() }} usuarios</p>
+@if (loading()) { <div class="state"><mat-spinner diameter="42" /></div> }
+@else if (error()) { <div class="state error"><mat-icon>error</mat-icon></div> }
+@else {
+<div class="cards-grid">
+    @for (usuario of usuariosFiltrados(); track usuario.id) {
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ usuario.nombre }}</mat-card-title>
+            <mat-card-subtitle>{{ usuario.rol }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p><strong>Email:</strong> {{ usuario.email }}</p>
+            <p><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+            <p><strong>Registrado:</strong> {{ usuario.fechaRegistro | date }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <a mat-button [routerLink]="['/usuarios', usuario.id]">Ver Detalle</a>
+        </mat-card-actions>
+    </mat-card>
+    }
+</div>
+}

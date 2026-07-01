@@ -1,0 +1,28 @@
+<h1>Reseñas</h1>
+<mat-form-field appearance="outline">
+    <mat-label>Buscar</mat-label>
+    <input matInput [(ngModel)]="search" />
+    <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>
+<button mat-stroked-button (click)="clearFilters()">Limpiar</button>
+<p>{{ totalResenas() }} reseñas</p>
+@if (loading()) { <div class="state"><mat-spinner diameter="42" /></div> }
+@else if (error()) { <div class="state error"><mat-icon>error</mat-icon></div> }
+@else {
+<div class="cards-grid">
+    @for (resena of resenasFiltradas(); track resena.id) {
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{ resena.calificacion }}/5 ⭐</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p>{{ resena.comentario }}</p>
+            <p><small>Profesional: {{ resena.perfilProfesionalId }}</small></p>
+        </mat-card-content>
+        <mat-card-actions>
+            <a mat-button [routerLink]="['/resenas', resena.id]">Ver Detalle</a>
+        </mat-card-actions>
+    </mat-card>
+    }
+</div>
+}

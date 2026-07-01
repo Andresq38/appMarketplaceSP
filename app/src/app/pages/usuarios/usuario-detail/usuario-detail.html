@@ -1,0 +1,18 @@
+<a mat-stroked-button routerLink="/usuarios"><mat-icon>arrow_back</mat-icon>Volver</a>
+@if (loading()) { <div class="state"><mat-spinner diameter="42" /></div> }
+@else if (error()) { <div class="state error"><mat-icon>error</mat-icon></div> }
+@else if (usuario()) {
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>{{ usuario()?.nombre }}</mat-card-title>
+        <mat-card-subtitle>{{ usuario()?.rol }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="info">
+            <span><strong>Email:</strong> {{ usuario()?.email }}</span>
+            <span><strong>Teléfono:</strong> {{ usuario()?.telefono }}</span>
+            <span><strong>Fecha Registro:</strong> {{ usuario()?.fechaRegistro | date }}</span>
+        </div>
+    </mat-card-content>
+</mat-card>
+}

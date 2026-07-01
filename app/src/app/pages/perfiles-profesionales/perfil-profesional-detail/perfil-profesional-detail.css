@@ -1,0 +1,282 @@
+.detail-header {
+    margin-bottom: 1.5rem;
+
+    button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+}
+
+.detail-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.profile-card {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.profile-header {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    align-items: start;
+
+    .profile-image {
+        position: relative;
+
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+            object-fit: cover;
+            aspect-ratio: 1;
+        }
+
+        .availability {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            padding: 0.75rem 1.25rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+
+            &.available {
+                background: #4caf50;
+                color: white;
+            }
+
+            &.unavailable {
+                background: #f44336;
+                color: white;
+            }
+        }
+    }
+
+    .profile-info {
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .titulo {
+            margin: 0.5rem 0 1.5rem;
+            font-size: 1.2rem;
+            color: var(--mat-sys-primary);
+            font-weight: 500;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+
+            .info-item {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                opacity: 0.8;
+
+                mat-icon {
+                    color: var(--mat-sys-primary);
+                }
+            }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+
+            button {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+    }
+}
+
+.divider {
+    margin: 1rem 0;
+}
+
+.profile-details {
+    padding: 2rem;
+
+    .detail-section {
+        margin-bottom: 2rem;
+
+        h2 {
+            margin: 0 0 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--mat-sys-primary);
+        }
+
+        p {
+            margin: 0;
+            line-height: 1.6;
+            opacity: 0.85;
+        }
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+
+        .info-box {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            .label {
+                font-size: 0.9rem;
+                font-weight: 600;
+                opacity: 0.6;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .value {
+                font-size: 1.1rem;
+                font-weight: 500;
+                color: var(--mat-sys-primary);
+            }
+
+            .modalidad-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.5rem 1rem;
+                border-radius: 16px;
+                background: color-mix(in srgb, var(--mat-sys-primary) 15%, transparent);
+                color: var(--mat-sys-primary);
+                font-weight: 500;
+                width: fit-content;
+
+                mat-icon {
+                    font-size: 1rem;
+                    width: 1rem;
+                    height: 1rem;
+                }
+            }
+        }
+    }
+
+    .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+
+        mat-chip {
+            mat-icon {
+                margin-right: 0.5rem;
+            }
+        }
+    }
+
+    .services-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+
+        .service-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent);
+            border: 1px solid color-mix(in srgb, var(--mat-sys-outline) 18%, transparent);
+
+            .service-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: start;
+                margin-bottom: 1rem;
+
+                h3 {
+                    margin: 0;
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    flex: 1;
+                }
+
+                .price {
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    color: var(--mat-sys-primary);
+                }
+            }
+
+            .service-description {
+                margin: 0 0 1rem;
+                opacity: 0.8;
+                line-height: 1.5;
+            }
+
+            .service-meta {
+                display: flex;
+                gap: 1.5rem;
+                font-size: 0.95rem;
+
+                span {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+
+                    mat-icon {
+                        font-size: 1rem;
+                        width: 1rem;
+                        height: 1rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.state {
+    min-height: 400px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    opacity: 0.8;
+
+    mat-icon {
+        font-size: 3rem;
+        width: 3rem;
+        height: 3rem;
+    }
+}
+
+.error {
+    color: var(--mat-sys-error);
+}
+
+@media (max-width: 768px) {
+    .profile-header {
+        grid-template-columns: 1fr;
+
+        .action-buttons {
+            flex-direction: column;
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+
+    .profile-details {
+        padding: 1.5rem;
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+}

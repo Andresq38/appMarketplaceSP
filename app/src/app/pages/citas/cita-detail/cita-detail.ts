@@ -1,0 +1,38 @@
+import { Component, inject, signal } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
+import { CommonModule } from '@angular/common';
+import { Cita } from '../../../core/models/cita.model';
+import { CitaService } from '../../../core/services/cita.service';
+
+@Component({
+  selector: 'app-cita-detail',
+  imports: [RouterLink, MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule, MatDividerModule, CommonModule],
+  templateUrl: './cita-detail.html',
+  styleUrl: './cita-detail.css',
+})
+export class CitaDetailPage {
+  private readonly route = inject(ActivatedRoute);
+  private readonly citaService = inject(CitaService);
+  cita = signal<Cita | null>(null);
+  loading = signal(false);
+  error = signal<string | null>(null);
+
+  ngOnInit(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    if (!id) { this.error.set('ID inválido.'); return; }
+    this.loadCita(id);
+  }
+
+  loadCita(id: number): void {
+    this.loading.set(true);
+    this.citaService.obtenerPorId(id).subscribe({
+      next: (response) => { this.cita.set(response.data); this.loading.set(false); },
+      error: () => { this.error.set('Error al cargar cita.'); this.loading.set(false); },
+    });
+  }
+}

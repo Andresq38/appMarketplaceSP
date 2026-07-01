@@ -1,0 +1,125 @@
+<section class="catalog-header">
+    <div>
+        <h1>Catálogo de Profesionales</h1>
+        <p>Encuentra los mejores profesionales de salud en nuestra plataforma</p>
+    </div>
+</section>
+
+<section class="catalog-filters">
+    <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar profesional</mat-label>
+        <input matInput [(ngModel)]="search"
+            placeholder="Nombre, título o especialidad" />
+        <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <div class="modalidad-filters">
+        @for (modalidad of modalidades; track modalidad) {
+        <button mat-stroked-button
+            [color]="modalidadFilter() === modalidad ? 'primary' : ''"
+            (click)="modalidadFilter() === modalidad ? modalidadFilter.set(null) : modalidadFilter.set(modalidad)">
+            <mat-icon>
+                @switch (modalidad) {
+                @case ('VIRTUAL') {
+                videocam
+                }
+                @case ('PRESENCIAL') {
+                location_on
+                }
+                @case ('MIXTO') {
+                apartment
+                }
+                }
+            </mat-icon>
+            {{ modalidad }}
+        </button>
+        }
+    </div>
+
+    <button mat-stroked-button class="secondary-button" (click)="clearFilters()">
+        Limpiar Filtros
+    </button>
+</section>
+
+<p class="summary">
+    {{ totalPerfiles() }} profesionales encontrados
+</p>
+
+@if (loading()) {
+<div class="state">
+    <mat-spinner diameter="42" />
+    <p>Cargando profesionales...</p>
+</div>
+} @else if (error()) {
+<div class="state error">
+    <mat-icon>error</mat-icon>
+    <p>{{ error() }}</p>
+</div>
+} @else {
+<div class="cards-grid">
+    @for (perfil of perfilesFiltrados(); track perfil.id) {
+    <mat-card class="professional-card">
+        <div class="card-image">
+            <img [src]="getImageUrl(perfil.imagen)" [alt]="perfil.usuario?.nombre" />
+            @if (perfil.disponible) {
+            <span class="availability available">Disponible</span>
+            } @else {
+            <span class="availability unavailable">No disponible</span>
+            }
+        </div>
+
+        <mat-card-header>
+            <div mat-card-avatar class="card-avatar">
+                <img [src]="getImageUrl(perfil.imagen)" [alt]="perfil.usuario?.nombre" />
+            </div>
+            <mat-card-title>{{ perfil.usuario?.nombre }} {{ perfil.usuario?.apellidos }}</mat-card-title>
+            <mat-card-subtitle>{{ perfil.titulo }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+            <p class="description">{{ perfil.descripcion }}</p>
+
+            <div class="info-row">
+                <span class="label">Experiencia:</span>
+                <span class="value">{{ perfil.aniosExperiencia }} años</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Ubicación:</span>
+                <span class="value">{{ perfil.provincia }}, {{ perfil.canton }}</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Tarifa Base:</span>
+                <span class="value">₡{{ perfil.tarifaBase }}/consulta</span>
+            </div>
+
+            @if (perfil.especialidades && perfil.especialidades.length > 0) {
+            <div class="especialidades">
+                <span class="label">Especialidades:</span>
+                <div class="chips">
+                    @for (esp of perfil.especialidades; track esp.id) {
+                    <mat-chip>{{ esp.nombre }}</mat-chip>
+                    }
+                </div>
+            </div>
+            }
+
+            <div class="modalidad-badge">
+                <mat-icon>{{ getModalidadIcon(perfil.modalidad) }}</mat-icon>
+                <span>{{ perfil.modalidad }}</span>
+            </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-stroked-button color="primary" [routerLink]="['/perfiles', perfil.id]">
+                Ver Detalle
+            </button>
+            <button mat-stroked-button color="accent">
+                Agendar Cita
+            </button>
+        </mat-card-actions>
+    </mat-card>
+    }
+</div>
+}
