@@ -1,11 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
-import { CommonModule } from '@angular/common';
 import { Cita } from '../../../core/models/cita.model';
 import { CitaService } from '../../../core/services/cita.service';
 
@@ -15,7 +15,7 @@ import { CitaService } from '../../../core/services/cita.service';
   templateUrl: './cita-detail.html',
   styleUrl: './cita-detail.css',
 })
-export class CitaDetailPage {
+export class CitaDetailPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly citaService = inject(CitaService);
   cita = signal<Cita | null>(null);

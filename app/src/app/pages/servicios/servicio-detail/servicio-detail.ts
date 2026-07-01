@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -14,7 +14,7 @@ import { ServicioService } from '../../../core/services/servicio.service';
   templateUrl: './servicio-detail.html',
   styleUrl: './servicio-detail.css',
 })
-export class ServicioDetailPage {
+export class ServicioDetailPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly servicioService = inject(ServicioService);
   servicio = signal<Servicio | null>(null);

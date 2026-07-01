@@ -10,9 +10,8 @@
         <div class="info">
             <span><strong>Profesional ID:</strong> {{ cita()?.profesionalId }}</span>
             <span><strong>Cliente ID:</strong> {{ cita()?.clienteId }}</span>
-            <span><strong>Fecha:</strong> {{ cita()?.fecha | date }}</span>
-            <span><strong>Hora Inicio:</strong> {{ cita()?.horaInicio }}</span>
-            <span><strong>Hora Fin:</strong> {{ cita()?.horaFin }}</span>
+            <span><strong>Fecha:</strong> {{ cita()?.fechaCita | date }}</span>
+            <span><strong>Hora:</strong> {{ cita()?.hora }}</span>
             <span><strong>Estado:</strong> {{ cita()?.estado }}</span>
             <span><strong>Modalidad:</strong> {{ cita()?.modalidad }}</span>
         </div>

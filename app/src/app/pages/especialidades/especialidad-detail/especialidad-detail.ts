@@ -1,5 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject, signal, OnInit } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,11 +10,11 @@ import { EspecialidadService } from '../../../core/services/especialidad.service
 
 @Component({
   selector: 'app-especialidad-detail',
-  imports: [RouterLink, MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [RouterLink, MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule, CommonModule],
   templateUrl: './especialidad-detail.html',
   styleUrl: './especialidad-detail.css',
 })
-export class EspecialidadDetailPage {
+export class EspecialidadDetailPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly especialidadService = inject(EspecialidadService);
   especialidad = signal<Especialidad | null>(null);

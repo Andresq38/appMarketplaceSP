@@ -46,24 +46,54 @@ export const createCitaSchema = z.object({
     }
 );
 
-export const updateCitaSchema = createCitaSchema
-    .omit({ clienteId: true, servicioId: true })
-    .partial()
-    .extend({
-        estado: z
-            .enum(["PENDIENTE", "ACEPTADA", "RECHAZADA", "CANCELADA", "COMPLETADA"])
-            .optional(),
-        comentarioProfesional: z
-            .string()
-            .trim()
-            .max(500, "El comentario no puede superar 500 caracteres")
-            .optional(),
-        motivoCancelacion: z
-            .string()
-            .trim()
-            .max(500, "El motivo no puede superar 500 caracteres")
-            .optional(),
-    });
+export const updateCitaSchema = z.object({
+    perfilProfesionalId: z
+        .number()
+        .int()
+        .positive("El profesional es obligatorio")
+        .optional(),
+    fechaSolicitada: z
+        .string()
+        .datetime("La fecha solicitada debe ser válida")
+        .optional(),
+    fechaCita: z
+        .string()
+        .datetime("La fecha de la cita debe ser válida")
+        .optional(),
+    horaInicio: z
+        .string()
+        .regex(horaRegex, "La hora debe estar en formato HH:mm")
+        .optional(),
+    horaFin: z
+        .string()
+        .regex(horaRegex, "La hora debe estar en formato HH:mm")
+        .optional(),
+    modalidad: z
+        .enum(["VIRTUAL", "PRESENCIAL"])
+        .optional(),
+    descripcion: z
+        .string()
+        .trim()
+        .max(500, "La descripción no puede superar 500 caracteres")
+        .optional(),
+    monto: z
+        .number()
+        .positive("El monto debe ser mayor a 0")
+        .optional(),
+    estado: z
+        .enum(["PENDIENTE", "ACEPTADA", "RECHAZADA", "CANCELADA", "COMPLETADA"])
+        .optional(),
+    comentarioProfesional: z
+        .string()
+        .trim()
+        .max(500, "El comentario no puede superar 500 caracteres")
+        .optional(),
+    motivoCancelacion: z
+        .string()
+        .trim()
+        .max(500, "El motivo no puede superar 500 caracteres")
+        .optional(),
+});
 
 export type CreateCitaDto = z.infer<typeof createCitaSchema>;
 export type UpdateCitaDto = z.infer<typeof updateCitaSchema>;

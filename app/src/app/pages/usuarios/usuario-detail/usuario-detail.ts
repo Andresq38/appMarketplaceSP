@@ -1,5 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,11 +11,11 @@ import { UsuarioService } from '../../../core/services/usuario.service';
 
 @Component({
   selector: 'app-usuario-detail',
-  imports: [RouterLink, MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule, MatDividerModule],
+  imports: [RouterLink, MatButtonModule, MatCardModule, MatIconModule, MatProgressSpinnerModule, MatDividerModule, CommonModule],
   templateUrl: './usuario-detail.html',
   styleUrl: './usuario-detail.css',
 })
-export class UsuarioDetailPage {
+export class UsuarioDetailPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly usuarioService = inject(UsuarioService);
   usuario = signal<Usuario | null>(null);

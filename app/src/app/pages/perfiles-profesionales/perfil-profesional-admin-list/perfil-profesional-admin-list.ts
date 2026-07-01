@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,6 +18,7 @@ import { PerfilProfesionalService } from '../../../core/services/perfil-profesio
   imports: [
     RouterLink,
     FormsModule,
+    CommonModule,
     MatButtonModule,
     MatIconModule,
     MatTableModule,

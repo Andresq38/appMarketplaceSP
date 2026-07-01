@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -26,7 +26,7 @@ import { PerfilProfesionalService } from '../../../core/services/perfil-profesio
   templateUrl: './perfil-profesional-detail.html',
   styleUrl: './perfil-profesional-detail.css',
 })
-export class PerfilProfesionalDetailPage {
+export class PerfilProfesionalDetailPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly perfilProfesionalService = inject(PerfilProfesionalService);
 

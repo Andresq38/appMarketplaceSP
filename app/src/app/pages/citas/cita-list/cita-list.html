@@ -13,8 +13,8 @@
     @for (cita of citasFiltradas(); track cita.id) {
     <mat-card>
         <mat-card-header>
-            <mat-card-title>{{ cita.fecha | date }}</mat-card-title>
-            <mat-card-subtitle>{{ cita.horaInicio }} - {{ cita.horaFin }}</mat-card-subtitle>
+            <mat-card-title>{{ cita.fechaCita | date }}</mat-card-title>
+            <mat-card-subtitle>{{ cita.hora }}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
             <p><strong>Profesional:</strong> {{ cita.profesionalId }}</p>

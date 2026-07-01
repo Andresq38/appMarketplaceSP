@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -13,7 +13,7 @@ import { ResenaService } from '../../../core/services/resena.service';
   templateUrl: './resena-detail.html',
   styleUrl: './resena-detail.css',
 })
-export class ResenaDetailPage {
+export class ResenaDetailPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly resenaService = inject(ResenaService);
   resena = signal<Resena | null>(null);
