@@ -12,6 +12,16 @@ export const perfilProfesionalService = {
         if (!usuario) {
             throw AppError.badRequest("El usuario indicado no existe");
         }
+
+        if (usuario.rol !== "PROFESIONAL") {
+            throw AppError.badRequest("Solo los usuarios con rol PROFESIONAL pueden tener un perfil profesional");
+        }
+
+        if (usuario.estado !== false) {
+            throw AppError.badRequest("El usuario debe estar desactivado (estado = false) para registrar un perfil profesional");
+        }
+
+        return usuario;
     },
 
     async validateEspecialidades(especialidadIds: number[]) {
@@ -139,6 +149,7 @@ export const perfilProfesionalService = {
         // Validar que el perfil exista
         const perfil = await prisma.perfilProfesional.findUnique({
             where: { id },
+            include: { usuario: true },
         });
 
         if (!perfil) {
@@ -150,6 +161,20 @@ export const perfilProfesionalService = {
             if (data.especialidadIds.length > 0) {
                 await this.validateEspecialidades(data.especialidadIds);
             }
+        }
+
+        // Si se actualizan datos de usuario, hacerlo primero
+        if (data.nombre || data.apellidos || data.email || data.telefono) {
+            const usuarioUpdateData: any = {};
+            if (data.nombre) usuarioUpdateData.nombre = data.nombre;
+            if (data.apellidos) usuarioUpdateData.apellidos = data.apellidos;
+            if (data.email) usuarioUpdateData.email = data.email;
+            if (data.telefono) usuarioUpdateData.telefono = data.telefono;
+
+            await prisma.usuario.update({
+                where: { id: perfil.usuarioId },
+                data: usuarioUpdateData,
+            });
         }
 
         return await prisma.perfilProfesional.update({

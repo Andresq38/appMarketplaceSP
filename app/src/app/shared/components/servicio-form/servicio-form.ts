@@ -33,6 +33,8 @@ import {
   ModalidadServicio
 } from '../../../core/models/servicio.model'
 import { Especialidad } from '../../../core/models/especialidad.model'
+import { PerfilProfesional } from '../../../core/models/perfil-profesional.model'
+import { Categoria } from '../../../core/models/categoria.model'
 
 @Component({
   selector: 'app-servicio-form',
@@ -55,6 +57,8 @@ export class ServicioForm {
   servicio = input<Servicio | null>(null);
   saving = input<boolean>(false);
   especialidades = input<Especialidad[]>([]);
+  perfiles = input<PerfilProfesional[]>([]);
+  categorias = input<Categoria[]>([]);
 
   guardar = output<ServicioCreateDto | ServicioUpdateDto>();
   cancelar = output<void>();
@@ -94,6 +98,14 @@ export class ServicioForm {
   }
 
   servicioForm = form(this.servicioModel, (path) => {
+    required(path.perfilId, {
+      message: 'Selecciona un profesional'
+    })
+
+    required(path.categoriaId, {
+      message: 'Selecciona una categoría'
+    })
+
     required(path.nombre, {
       message: 'El nombre del servicio es obligatorio'
     })
@@ -151,6 +163,8 @@ export class ServicioForm {
   }
 
   private marcarCamposComoTocados() {
+    this.servicioForm.perfilId().markAsTouched();
+    this.servicioForm.categoriaId().markAsTouched();
     this.servicioForm.nombre().markAsTouched();
     this.servicioForm.descripcion().markAsTouched();
     this.servicioForm.precio().markAsTouched();
@@ -160,6 +174,8 @@ export class ServicioForm {
 
   private formularioInvalido(): boolean {
     return (
+      this.servicioForm.perfilId().invalid() ||
+      this.servicioForm.categoriaId().invalid() ||
       this.servicioForm.nombre().invalid() ||
       this.servicioForm.descripcion().invalid() ||
       this.servicioForm.precio().invalid() ||

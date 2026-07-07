@@ -50,6 +50,12 @@ export interface PerfilProfesionalCreateDto {
 }
 
 export interface PerfilProfesionalUpdateDto {
+    // Datos del Usuario (para edición)
+    nombre?: string;
+    apellidos?: string;
+    email?: string;
+    telefono?: string;
+    // Datos del Perfil
     titulo?: string;
     descripcion?: string;
     aniosExperiencia?: number;
@@ -65,6 +71,11 @@ export interface PerfilProfesionalUpdateDto {
 }
 
 export interface PerfilProfesionalFormModel {
+    usuarioId: number | null;
+    nombre: string;
+    apellidos: string;
+    correo: string;
+    telefono: string;
     titulo: string;
     descripcion: string;
     aniosExperiencia: number;

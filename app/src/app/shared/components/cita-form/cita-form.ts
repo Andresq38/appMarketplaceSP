@@ -29,6 +29,9 @@ import {
   CitaUpdateDto,
   ModalidadCita
 } from '../../../core/models/cita.model'
+import { Usuario } from '../../../core/models/usuario.model'
+import { PerfilProfesional } from '../../../core/models/perfil-profesional.model'
+import { Servicio } from '../../../core/models/servicio.model'
 
 @Component({
   selector: 'app-cita-form',
@@ -49,6 +52,9 @@ import {
 export class CitaForm {
   cita = input<Cita | null>(null);
   saving = input<boolean>(false);
+  usuarios = input<Usuario[]>([]);
+  perfiles = input<PerfilProfesional[]>([]);
+  servicios = input<Servicio[]>([]);
 
   guardar = output<CitaCreateDto | CitaUpdateDto>();
   cancelar = output<void>();
@@ -62,7 +68,14 @@ export class CitaForm {
     descripcion: ''
   });
 
+  isEdit = computed(() => this.cita() !== null);
+  isSubmitting = computed(() => this.saving())
+  
+  // Modalidades disponibles según el profesional seleccionado
+  modalidadesFiltradas = signal<string[]>([]);
+
   constructor() {
+    // Effect para cargar cita cuando se edita
     effect(() => {
       const cita = this.cita();
       if (!cita) {
@@ -79,9 +92,50 @@ export class CitaForm {
         descripcion: cita.descripcion ?? ''
       });
     });
+
+    // Effect para filtrar modalidades cuando se selecciona un profesional
+    effect(() => {
+      const profesionalId = this.citaModel().profesionalId;
+      if (!profesionalId) {
+        this.modalidadesFiltradas.set([]);
+        return;
+      }
+      
+      const perfil = this.perfiles().find(p => p.id === profesionalId);
+      if (!perfil) {
+        this.modalidadesFiltradas.set([]);
+        return;
+      }
+      
+      // Filtrar modalidades según la modalidad del profesional
+      let modalidades: string[] = [];
+      if (perfil.modalidad === 'MIXTO') {
+        modalidades = ['VIRTUAL', 'PRESENCIAL'];
+      } else if (perfil.modalidad === 'VIRTUAL') {
+        modalidades = ['VIRTUAL'];
+      } else if (perfil.modalidad === 'PRESENCIAL') {
+        modalidades = ['PRESENCIAL'];
+      }
+      
+      this.modalidadesFiltradas.set(modalidades);
+      
+      // Limpiar modalidad seleccionada si no es válida
+      const modalidadActual = this.citaModel().modalidad;
+      if (modalidadActual && !modalidades.includes(modalidadActual)) {
+        this.citaModel.update(m => ({ ...m, modalidad: '' }));
+      }
+    });
   }
 
   citaForm = form(this.citaModel, (path) => {
+    required(path.clienteId, {
+      message: 'Selecciona un cliente'
+    })
+
+    required(path.profesionalId, {
+      message: 'Selecciona un profesional'
+    })
+
     required(path.fechaCita, {
       message: 'La fecha es obligatoria'
     })
@@ -105,10 +159,6 @@ export class CitaForm {
     })
   });
 
-  isEdit = computed(() => this.cita() !== null);
-  isSubmitting = computed(() => this.saving())
-  modalidades = Object.values(ModalidadCita);
-
   private resetForm() {
     this.citaModel.set({
       clienteId: null,
@@ -121,6 +171,8 @@ export class CitaForm {
   }
 
   private marcarCamposComoTocados() {
+    this.citaForm.clienteId().markAsTouched();
+    this.citaForm.profesionalId().markAsTouched();
     this.citaForm.fechaCita().markAsTouched();
     this.citaForm.hora().markAsTouched();
     this.citaForm.modalidad().markAsTouched();
@@ -129,6 +181,8 @@ export class CitaForm {
 
   private formularioInvalido(): boolean {
     return (
+      this.citaForm.clienteId().invalid() ||
+      this.citaForm.profesionalId().invalid() ||
       this.citaForm.fechaCita().invalid() ||
       this.citaForm.hora().invalid() ||
       this.citaForm.modalidad().invalid() ||
@@ -139,6 +193,8 @@ export class CitaForm {
   private buildDto(): CitaCreateDto | CitaUpdateDto {
     const value = this.citaModel();
     return {
+      clienteId: value.clienteId as number,
+      profesionalId: value.profesionalId as number,
       fechaCita: value.fechaCita,
       hora: value.hora,
       modalidad: value.modalidad as ModalidadCita,

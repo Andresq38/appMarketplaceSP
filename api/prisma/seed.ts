@@ -94,7 +94,7 @@ async function main() {
                 password: "123456", 
                 telefono: "8765-4323",
                 rol: RolUsuario.PROFESIONAL,
-                estado: true
+                estado: false
             },
             { 
                 nombre: "Alejandro", 
@@ -103,7 +103,7 @@ async function main() {
                 password: "123456", 
                 telefono: "8765-4324",
                 rol: RolUsuario.PROFESIONAL,
-                estado: true
+                estado: false
             },
             { 
                 nombre: "Jessie", 
@@ -112,7 +112,7 @@ async function main() {
                 password: "123456", 
                 telefono: "8765-4325",
                 rol: RolUsuario.PROFESIONAL,
-                estado: true
+                estado: false
             },
             { 
                 nombre: "Valeria", 
@@ -121,7 +121,7 @@ async function main() {
                 password: "123456", 
                 telefono: "8765-4326",
                 rol: RolUsuario.PROFESIONAL,
-                estado: true
+                estado: false
             },
             { 
                 nombre: "Samantha", 
@@ -130,7 +130,16 @@ async function main() {
                 password: "123456", 
                 telefono: "8765-4328",
                 rol: RolUsuario.PROFESIONAL,
-                estado: true
+                estado: false
+            },
+            { 
+                nombre: "Bonnie", 
+                apellidos: "Soto Aguilar", 
+                email: "bonniesoto@gmail.com", 
+                password: "123456", 
+                telefono: "8765-4329",
+                rol: RolUsuario.PROFESIONAL,
+                estado: false
             },
         ],
     });

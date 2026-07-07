@@ -5,6 +5,97 @@
       <section class="form-section">
         <h3 class="section-title">Información Personal</h3>
         <div class="form-grid">
+          <!-- Seleccionar Usuario (solo en modo crear) -->
+          @if (!isEdit()) {
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Usuario Profesional*</mat-label>
+              <mat-select 
+                [formField]="perfilForm.usuarioId"
+                (selectionChange)="onUsuarioSeleccionado($event.value)"
+              >
+                <mat-option value="">Selecciona un usuario profesional</mat-option>
+                @for (usuario of usuarios(); track usuario.id) {
+                  <mat-option [value]="usuario.id">
+                    {{ usuario.nombre }} {{ usuario.apellidos }} ({{ usuario.email }})
+                  </mat-option>
+                }
+              </mat-select>
+              @if (perfilForm.usuarioId().touched() && perfilForm.usuarioId().invalid()) {
+                <mat-error>
+                  {{ perfilForm.usuarioId().errors()[0].message }}
+                </mat-error>
+              }
+            </mat-form-field>
+          }
+
+          <!-- Datos de Usuario (Solo visible si está seleccionado o en edición) -->
+          @if (perfilModel().usuarioId || isEdit()) {
+            <!-- En CREATE: mostrar como texto | En EDIT: editable -->
+            @if (!isEdit()) {
+              <!-- Modo CREATE: Solo lectura -->
+              <div class="user-info-field">
+                <label>Nombre</label>
+                <p>{{ perfilModel().nombre }}</p>
+              </div>
+
+              <div class="user-info-field">
+                <label>Apellidos</label>
+                <p>{{ perfilModel().apellidos }}</p>
+              </div>
+
+              <div class="user-info-field">
+                <label>Correo Electrónico</label>
+                <p>{{ perfilModel().correo }}</p>
+              </div>
+
+              <div class="user-info-field">
+                <label>Teléfono</label>
+                <p>{{ perfilModel().telefono }}</p>
+              </div>
+            } @else {
+              <!-- Modo EDIT: Editable -->
+              <mat-form-field appearance="outline">
+                <mat-label>Nombre</mat-label>
+                <input matInput type="text" [formField]="perfilForm.nombre" />
+                @if (perfilForm.nombre().touched() && perfilForm.nombre().invalid()) {
+                  <mat-error>
+                    {{ perfilForm.nombre().errors()[0].message }}
+                  </mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Apellidos</mat-label>
+                <input matInput type="text" [formField]="perfilForm.apellidos" />
+                @if (perfilForm.apellidos().touched() && perfilForm.apellidos().invalid()) {
+                  <mat-error>
+                    {{ perfilForm.apellidos().errors()[0].message }}
+                  </mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Correo Electrónico</mat-label>
+                <input matInput type="email" [formField]="perfilForm.correo" />
+                @if (perfilForm.correo().touched() && perfilForm.correo().invalid()) {
+                  <mat-error>
+                    {{ perfilForm.correo().errors()[0].message }}
+                  </mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Teléfono</mat-label>
+                <input matInput type="tel" [formField]="perfilForm.telefono" />
+                @if (perfilForm.telefono().touched() && perfilForm.telefono().invalid()) {
+                  <mat-error>
+                    {{ perfilForm.telefono().errors()[0].message }}
+                  </mat-error>
+                }
+              </mat-form-field>
+            }
+          }
+
           <!-- Título -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Título Profesional</mat-label>

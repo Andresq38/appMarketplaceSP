@@ -3,6 +3,12 @@ import { Router } from '@angular/router'
 import { forkJoin } from 'rxjs'
 import { CitaForm } from '../../../shared/components/cita-form/cita-form'
 import { CitaService } from '../../../core/services/cita.service'
+import { UsuarioService } from '../../../core/services/usuario.service'
+import { PerfilProfesionalService } from '../../../core/services/perfil-profesional.service'
+import { ServicioService } from '../../../core/services/servicio.service'
+import { Usuario } from '../../../core/models/usuario.model'
+import { PerfilProfesional } from '../../../core/models/perfil-profesional.model'
+import { Servicio } from '../../../core/models/servicio.model'
 import { CitaCreateDto, CitaUpdateDto } from '../../../core/models/cita.model'
 
 @Component({
@@ -15,6 +21,13 @@ import { CitaCreateDto, CitaUpdateDto } from '../../../core/models/cita.model'
 export class CitaCreatePage {
   private readonly router = inject(Router)
   private readonly citaService = inject(CitaService)
+  private readonly usuarioService = inject(UsuarioService)
+  private readonly perfilService = inject(PerfilProfesionalService)
+  private readonly servicioService = inject(ServicioService)
+
+  usuarios = signal<Usuario[]>([])
+  perfiles = signal<PerfilProfesional[]>([])
+  servicios = signal<Servicio[]>([])
 
   loading = signal(true)
   saving = signal(false)
@@ -28,9 +41,17 @@ export class CitaCreatePage {
     this.loading.set(true)
     this.error.set(null)
     // forkJoin agrupa todo y devuelve todos los resultados juntos
-    forkJoin({}).subscribe({
-      next: () => {
-        // No hay datos adicionales para cargar en citas
+    forkJoin({
+      usuarios: this.usuarioService.listar(),
+      perfiles: this.perfilService.listar(),
+      servicios: this.servicioService.listar()
+    }).subscribe({
+      next: ({ usuarios, perfiles, servicios }) => {
+        // Filtrar solo usuarios con rol CLIENTE
+        const usuariosClientes = (usuarios.data ?? []).filter(u => u.rol === 'CLIENTE')
+        this.usuarios.set(usuariosClientes)
+        this.perfiles.set(perfiles.data ?? [])
+        this.servicios.set(servicios.data ?? [])
       },
       error: () => {
         this.error.set('No se pudieron cargar los datos del formulario')

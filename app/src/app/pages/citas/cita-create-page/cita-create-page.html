@@ -14,6 +14,9 @@
     }
 
     <app-cita-form
+      [usuarios]="usuarios()"
+      [perfiles]="perfiles()"
+      [servicios]="servicios()"
       [saving]="saving()"
       (guardar)="guardar($event)"
       (cancelar)="cancelar()"

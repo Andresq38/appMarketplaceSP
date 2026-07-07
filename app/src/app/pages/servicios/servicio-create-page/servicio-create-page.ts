@@ -4,7 +4,11 @@ import { forkJoin } from 'rxjs'
 import { ServicioForm } from '../../../shared/components/servicio-form/servicio-form'
 import { ServicioService } from '../../../core/services/servicio.service'
 import { EspecialidadService } from '../../../core/services/especialidad.service'
+import { PerfilProfesionalService } from '../../../core/services/perfil-profesional.service'
+import { CategoriaService } from '../../../core/services/categoria.service'
 import { Especialidad } from '../../../core/models/especialidad.model'
+import { PerfilProfesional } from '../../../core/models/perfil-profesional.model'
+import { Categoria } from '../../../core/models/categoria.model'
 import { ServicioCreateDto, ServicioUpdateDto } from '../../../core/models/servicio.model'
 
 @Component({
@@ -18,8 +22,12 @@ export class ServicioCreatePage {
   private readonly router = inject(Router)
   private readonly servicioService = inject(ServicioService)
   private readonly especialidadService = inject(EspecialidadService)
+  private readonly perfilService = inject(PerfilProfesionalService)
+  private readonly categoriaService = inject(CategoriaService)
 
   especialidades = signal<Especialidad[]>([])
+  perfiles = signal<PerfilProfesional[]>([])
+  categorias = signal<Categoria[]>([])
   loading = signal(true)
   saving = signal(false)
   error = signal<string | null>(null)
@@ -33,10 +41,14 @@ export class ServicioCreatePage {
     this.error.set(null)
     // forkJoin agrupa todo y devuelve todos los resultados juntos
     forkJoin({
-      especialidades: this.especialidadService.listar()
+      especialidades: this.especialidadService.listar(),
+      perfiles: this.perfilService.listar(),
+      categorias: this.categoriaService.listar()
     }).subscribe({
-      next: ({ especialidades }) => {
+      next: ({ especialidades, perfiles, categorias }) => {
         this.especialidades.set(especialidades.data ?? [])
+        this.perfiles.set(perfiles.data ?? [])
+        this.categorias.set(categorias.data ?? [])
       },
       error: () => {
         this.error.set('No se pudieron cargar los datos del formulario')

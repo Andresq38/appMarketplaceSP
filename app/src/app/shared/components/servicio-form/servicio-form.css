@@ -1,6 +1,12 @@
 .servicio-form-card {
   margin: 20px auto;
   max-width: 700px;
+  background-color: #1e1e1e !important;
+  color: #e0e0e0;
+}
+
+.servicio-form-card mat-card-content {
+  background-color: #1e1e1e !important;
 }
 
 .servicio-form {
@@ -18,10 +24,10 @@
 .section-title {
   font-size: 16px;
   font-weight: 500;
-  color: #424242;
+  color: #e0e0e0;
   margin: 0;
   padding-bottom: 8px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid #424242;
 }
 
 .form-grid {
@@ -42,10 +48,11 @@
 
 .specialty-card {
   padding: 12px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #424242;
   border-radius: 8px;
   transition: all 0.3s ease;
-  background: #fafafa;
+  background: #2d2d2d;
+  color: #e0e0e0;
 }
 
 .specialty-card:hover {

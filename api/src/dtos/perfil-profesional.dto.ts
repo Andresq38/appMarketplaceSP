@@ -58,6 +58,29 @@ export const updatePerfilProfesionalSchema = createPerfilProfesionalSchema
     .extend({
         disponible: z.boolean().optional(),
         activo: z.boolean().optional(),
+        // Campos de Usuario para edición
+        nombre: z
+            .string()
+            .trim()
+            .min(2, "El nombre debe tener al menos 2 caracteres")
+            .max(100, "El nombre no puede superar 100 caracteres")
+            .optional(),
+        apellidos: z
+            .string()
+            .trim()
+            .min(2, "Los apellidos deben tener al menos 2 caracteres")
+            .max(100, "Los apellidos no pueden superar 100 caracteres")
+            .optional(),
+        email: z
+            .string()
+            .email("Email inválido")
+            .optional(),
+        telefono: z
+            .string()
+            .trim()
+            .min(7, "El teléfono debe tener al menos 7 caracteres")
+            .max(20, "El teléfono no puede superar 20 caracteres")
+            .optional(),
     });
 
 export type CreatePerfilProfesionalDto = z.infer<typeof createPerfilProfesionalSchema>;

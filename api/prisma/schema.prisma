@@ -46,7 +46,7 @@ model Usuario {
   password  String  @db.VarChar(255)
   telefono  String? @db.VarChar(20)
   rol       RolUsuario @default(CLIENTE)
-  estado    Boolean @default(true)
+  estado    Boolean @default(false)
 
   perfilProfesional PerfilProfesional?
   citasComoCliente  Cita[]              @relation("citaCliente")

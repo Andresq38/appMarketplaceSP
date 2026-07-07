@@ -1,6 +1,12 @@
 .perfil-form-card {
   margin: 20px auto;
   max-width: 700px;
+  background-color: #1e1e1e !important;
+  color: #e0e0e0;
+}
+
+.perfil-form-card mat-card-content {
+  background-color: #1e1e1e !important;
 }
 
 .perfil-form {
@@ -18,10 +24,10 @@
 .section-title {
   font-size: 16px;
   font-weight: 500;
-  color: #424242;
+  color: #e0e0e0;
   margin: 0;
   padding-bottom: 8px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid #424242;
 }
 
 .form-grid {
@@ -42,20 +48,21 @@
 
 .specialty-card {
   padding: 12px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #424242;
   border-radius: 8px;
   transition: all 0.3s ease;
-  background: #fafafa;
+  background: #2d2d2d;
+  color: #e0e0e0;
 }
 
 .specialty-card:hover {
   border-color: #2196f3;
-  background: #f0f7ff;
+  background: #3a3a3a;
 }
 
 .specialty-card-active {
   border-color: #2196f3;
-  background: #e3f2fd;
+  background: #1a3a52;
   font-weight: 500;
 }
 
@@ -71,7 +78,7 @@
   justify-content: flex-end;
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid #424242;
 }
 
 .primary-icon-button,
@@ -98,9 +105,9 @@ button:disabled {
   flex-direction: column;
   gap: 12px;
   padding: 16px;
-  border: 2px dashed #ccc;
+  border: 2px dashed #424242;
   border-radius: 8px;
-  background: #fafafa;
+  background: #2d2d2d;
   align-items: center;
   justify-content: center;
   min-height: 200px;
@@ -111,9 +118,9 @@ button:disabled {
   align-items: center;
   justify-content: center;
   min-height: 200px;
-  border: 1px solid #e0e0e0;
+  border: 2px solid #2196f3;
   border-radius: 8px;
-  background: #f5f5f5;
+  background: #2d2d2d;
   overflow: hidden;
 }
 
@@ -128,14 +135,15 @@ button:disabled {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  color: #999;
+  color: #e0e0e0;
+  font-weight: 500;
 }
 
 .empty-preview mat-icon {
   font-size: 48px;
   width: 48px;
   height: 48px;
-  color: #ccc;
+  color: #2196f3;
 }
 
 .uploading {
@@ -148,8 +156,33 @@ button:disabled {
 
 .media-section {
   padding: 16px;
-  background: #f9f9f9;
+  background: #2d2d2d;
   border-radius: 8px;
+}
+
+.user-info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  background: #2d2d2d;
+  border-radius: 4px;
+  border-left: 3px solid #2196f3;
+}
+
+.user-info-field label {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #90caf9;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.user-info-field p {
+  font-size: 14px;
+  color: #e0e0e0;
+  margin: 0;
+  font-weight: 500;
 }
 
 @media (max-width: 600px) {

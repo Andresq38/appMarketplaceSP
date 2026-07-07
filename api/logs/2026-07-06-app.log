@@ -1,0 +1,2 @@
+{"error":{"clientVersion":"7.8.0","name":"PrismaClientValidationError"},"level":"error","message":"Error no controlado","method":"GET","path":"/api/perfil-profesional","timestamp":"2026-07-06 22:24:55.820"}
+{"level":"warn","message":"Perfil profesional no encontrado","method":"GET","name":"NotFoundError","path":"/api/perfil-profesional/6","statusCode":404,"timestamp":"2026-07-06 22:41:12.332"}
