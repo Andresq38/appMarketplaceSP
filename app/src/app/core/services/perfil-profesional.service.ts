@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { ApiPaginatedResponse, ApiResponse } from '../models/api-response.model';
-import { PerfilProfesional } from '../models/perfil-profesional.model';
+import { PerfilProfesional, PerfilProfesionalCreateDto, PerfilProfesionalUpdateDto } from '../models/perfil-profesional.model';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilProfesionalService {
@@ -15,6 +15,18 @@ export class PerfilProfesionalService {
 
   obtenerPorId(id: number) {
     return this.http.get<ApiResponse<PerfilProfesional>>(`${this.apiUrl}/${id}`);
+  }
+
+  crear(datos: PerfilProfesionalCreateDto) {
+    return this.http.post<ApiResponse<PerfilProfesional>>(this.apiUrl, datos);
+  }
+
+  actualizar(id: number, datos: PerfilProfesionalUpdateDto) {
+    return this.http.put<ApiResponse<PerfilProfesional>>(`${this.apiUrl}/${id}`, datos);
+  }
+
+  eliminar(id: number) {
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
   }
 
   getImageUrl(imageName: string): string {

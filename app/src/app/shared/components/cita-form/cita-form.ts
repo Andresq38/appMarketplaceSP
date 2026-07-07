@@ -1,0 +1,160 @@
+import {
+  Component,
+  computed,
+  effect,
+  input,
+  output,
+  signal
+} from '@angular/core';
+import { CommonModule } from '@angular/common'
+import {
+  FormField,
+  form,
+  required,
+  minLength,
+  maxLength
+} from '@angular/forms/signals'
+
+import { MatCardModule } from '@angular/material/card'
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatInputModule } from '@angular/material/input'
+import { MatButtonModule } from '@angular/material/button'
+import { MatIconModule } from '@angular/material/icon'
+import { MatSelectModule } from '@angular/material/select'
+
+import {
+  Cita,
+  CitaCreateDto,
+  CitaFormModel,
+  CitaUpdateDto,
+  ModalidadCita
+} from '../../../core/models/cita.model'
+
+@Component({
+  selector: 'app-cita-form',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormField,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSelectModule
+  ],
+  templateUrl: './cita-form.html',
+  styleUrl: './cita-form.css'
+})
+export class CitaForm {
+  cita = input<Cita | null>(null);
+  saving = input<boolean>(false);
+
+  guardar = output<CitaCreateDto | CitaUpdateDto>();
+  cancelar = output<void>();
+
+  citaModel = signal<CitaFormModel>({
+    clienteId: null,
+    profesionalId: null,
+    servicioId: null,
+    fechaCita: '',
+    hora: '',
+    modalidad: '',
+    descripcion: ''
+  });
+
+  constructor() {
+    effect(() => {
+      const cita = this.cita();
+      if (!cita) {
+        this.resetForm();
+        return;
+      }
+
+      this.citaModel.set({
+        clienteId: cita.clienteId ?? null,
+        profesionalId: cita.perfilProfesionalId ?? null,
+        servicioId: cita.servicioId ?? null,
+        fechaCita: cita.fechaCita ? new Date(cita.fechaCita).toISOString().split('T')[0] : '',
+        hora: cita.horaInicio ?? '',
+        modalidad: cita.modalidad ?? '',
+        descripcion: cita.descripcion ?? ''
+      });
+    });
+  }
+
+  citaForm = form(this.citaModel, (path) => {
+    required(path.fechaCita, {
+      message: 'La fecha es obligatoria'
+    })
+
+    required(path.hora, {
+      message: 'La hora es obligatoria'
+    })
+
+    required(path.modalidad, {
+      message: 'Seleccione una modalidad'
+    })
+
+    required(path.descripcion, {
+      message: 'La descripción es obligatoria'
+    })
+    minLength(path.descripcion, 10, {
+      message: 'La descripción debe tener mínimo 10 caracteres'
+    })
+    maxLength(path.descripcion, 500, {
+      message: 'Máximo 500 caracteres'
+    })
+  });
+
+  isEdit = computed(() => this.cita() !== null);
+  isSubmitting = computed(() => this.saving())
+  modalidades = Object.values(ModalidadCita);
+
+  private resetForm() {
+    this.citaModel.set({
+      clienteId: null,
+      profesionalId: null,
+      servicioId: null,
+      fechaCita: '',
+      hora: '',
+      modalidad: '',
+      descripcion: ''
+    });
+  }
+
+  private marcarCamposComoTocados() {
+    this.citaForm.fechaCita().markAsTouched();
+    this.citaForm.hora().markAsTouched();
+    this.citaForm.modalidad().markAsTouched();
+    this.citaForm.descripcion().markAsTouched();
+  }
+
+  private formularioInvalido(): boolean {
+    return (
+      this.citaForm.fechaCita().invalid() ||
+      this.citaForm.hora().invalid() ||
+      this.citaForm.modalidad().invalid() ||
+      this.citaForm.descripcion().invalid()
+    );
+  }
+
+  private buildDto(): CitaCreateDto | CitaUpdateDto {
+    const value = this.citaModel();
+    return {
+      fechaCita: value.fechaCita,
+      hora: value.hora,
+      modalidad: value.modalidad as ModalidadCita,
+      descripcion: value.descripcion.trim()
+    };
+  }
+
+  submit() {
+    if (this.isSubmitting()) return;
+    this.marcarCamposComoTocados();
+    if (this.formularioInvalido()) return;
+    const dto = this.buildDto();
+    console.log('JSON enviado al API:', dto);
+    this.guardar.emit(dto);
+  }
+}

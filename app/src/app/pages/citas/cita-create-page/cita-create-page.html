@@ -1,0 +1,22 @@
+<section class="page-container">
+  <header class="page-header">
+    <h1>Registrar Cita</h1>
+    <p>Cree una nueva cita en el sistema.</p>
+  </header>
+
+  @if (loading()) {
+    <p>Cargando datos del formulario...</p>
+  } @else {
+    @if (error()) {
+      <p class="error-message">
+        {{ error() }}
+      </p>
+    }
+
+    <app-cita-form
+      [saving]="saving()"
+      (guardar)="guardar($event)"
+      (cancelar)="cancelar()"
+    ></app-cita-form>
+  }
+</section>

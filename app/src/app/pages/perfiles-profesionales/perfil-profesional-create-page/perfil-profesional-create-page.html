@@ -1,0 +1,23 @@
+<section class="page-container">
+  <header class="page-header">
+    <h1>Registrar Perfil Profesional</h1>
+    <p>Agregue un nuevo perfil profesional al sistema.</p>
+  </header>
+
+  @if (loading()) {
+    <p>Cargando datos del formulario...</p>
+  } @else {
+    @if (error()) {
+      <p class="error-message">
+        {{ error() }}
+      </p>
+    }
+
+    <app-perfil-profesional-form
+      [especialidades]="especialidades()"
+      [saving]="saving()"
+      (guardar)="guardar($event)"
+      (cancelar)="cancelar()"
+    ></app-perfil-profesional-form>
+  }
+</section>

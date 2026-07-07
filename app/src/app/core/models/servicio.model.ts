@@ -46,3 +46,15 @@ export interface ServicioUpdateDto {
     estado?: boolean;
     especialidadIds?: number[];
 }
+
+export interface ServicioFormModel {
+    perfilId: number | null;
+    categoriaId: number | null;
+    nombre: string;
+    descripcion: string;
+    precio: number;
+    duracionMinutos: number;
+    modalidad: ModalidadServicio | '';
+    estado: boolean;
+    especialidadIds: number[];
+}

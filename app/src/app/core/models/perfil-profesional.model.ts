@@ -63,3 +63,17 @@ export interface PerfilProfesionalUpdateDto {
     imagen?: string;
     especialidadIds?: number[];
 }
+
+export interface PerfilProfesionalFormModel {
+    titulo: string;
+    descripcion: string;
+    aniosExperiencia: number;
+    modalidad: ModalidadServicio | '';
+    provincia: string;
+    canton: string;
+    distrito: string;
+    tarifaBase: number;
+    disponible: boolean;
+    imagen: string;
+    especialidadIds: number[];
+}

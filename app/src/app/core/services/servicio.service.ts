@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { ApiPaginatedResponse, ApiResponse } from '../models/api-response.model';
-import { Servicio } from '../models/servicio.model';
+import { Servicio, ServicioCreateDto, ServicioUpdateDto } from '../models/servicio.model';
 
 @Injectable({ providedIn: 'root' })
 export class ServicioService {
@@ -15,5 +15,17 @@ export class ServicioService {
 
   obtenerPorId(id: number) {
     return this.http.get<ApiResponse<Servicio>>(`${this.apiUrl}/${id}`);
+  }
+
+  crear(datos: ServicioCreateDto) {
+    return this.http.post<ApiResponse<Servicio>>(this.apiUrl, datos);
+  }
+
+  actualizar(id: number, datos: ServicioUpdateDto) {
+    return this.http.put<ApiResponse<Servicio>>(`${this.apiUrl}/${id}`, datos);
+  }
+
+  eliminar(id: number) {
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
   }
 }

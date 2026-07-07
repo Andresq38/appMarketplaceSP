@@ -50,3 +50,13 @@ export interface CitaUpdateDto {
     hora?: string;
     fechaCita?: string;
 }
+
+export interface CitaFormModel {
+    clienteId: number | null;
+    profesionalId: number | null;
+    servicioId: number | null;
+    fechaCita: string;
+    hora: string;
+    modalidad: ModalidadCita | '';
+    descripcion: string;
+}

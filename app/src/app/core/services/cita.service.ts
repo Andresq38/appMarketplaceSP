@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { ApiPaginatedResponse, ApiResponse } from '../models/api-response.model';
-import { Cita } from '../models/cita.model';
+import { Cita, CitaCreateDto, CitaUpdateDto } from '../models/cita.model';
 
 @Injectable({ providedIn: 'root' })
 export class CitaService {
@@ -15,5 +15,17 @@ export class CitaService {
 
   obtenerPorId(id: number) {
     return this.http.get<ApiResponse<Cita>>(`${this.apiUrl}/${id}`);
+  }
+
+  crear(datos: CitaCreateDto) {
+    return this.http.post<ApiResponse<Cita>>(this.apiUrl, datos);
+  }
+
+  actualizar(id: number, datos: CitaUpdateDto) {
+    return this.http.put<ApiResponse<Cita>>(`${this.apiUrl}/${id}`, datos);
+  }
+
+  eliminar(id: number) {
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
   }
 }

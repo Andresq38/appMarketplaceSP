@@ -1,0 +1,121 @@
+<mat-card class="servicio-form-card">
+  <mat-card-content>
+    <form class="servicio-form" (submit)="$event.preventDefault(); submit()">
+      <!-- Sección Principal -->
+      <section class="form-section">
+        <h3 class="section-title">Información del Servicio</h3>
+        <div class="form-grid">
+          <!-- Nombre -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre del Servicio</mat-label>
+            <input matInput type="text" [formField]="servicioForm.nombre" />
+            @if (servicioForm.nombre().touched() && servicioForm.nombre().invalid()) {
+              <mat-error>
+                {{ servicioForm.nombre().errors()[0].message }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Descripción -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput rows="4" [formField]="servicioForm.descripcion"></textarea>
+            @if (servicioForm.descripcion().touched() && servicioForm.descripcion().invalid()) {
+              <mat-error>
+                {{ servicioForm.descripcion().errors()[0].message }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Precio -->
+          <mat-form-field appearance="outline">
+            <mat-label>Precio (₡)</mat-label>
+            <input matInput type="number" [formField]="servicioForm.precio" step="1000" min="0" />
+            @if (servicioForm.precio().touched() && servicioForm.precio().invalid()) {
+              <mat-error>
+                {{ servicioForm.precio().errors()[0].message }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Duración en Minutos -->
+          <mat-form-field appearance="outline">
+            <mat-label>Duración (minutos)</mat-label>
+            <input matInput type="number" [formField]="servicioForm.duracionMinutos" step="15" min="15" />
+            @if (servicioForm.duracionMinutos().touched() && servicioForm.duracionMinutos().invalid()) {
+              <mat-error>
+                {{ servicioForm.duracionMinutos().errors()[0].message }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Modalidad -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Modalidad</mat-label>
+            <mat-select [formField]="servicioForm.modalidad">
+              <mat-option value="">Selecciona una modalidad</mat-option>
+              @for (modalidad of modalidades; track modalidad) {
+                <mat-option [value]="modalidad">
+                  {{ modalidad }}
+                </mat-option>
+              }
+            </mat-select>
+            @if (servicioForm.modalidad().touched() && servicioForm.modalidad().invalid()) {
+              <mat-error>
+                {{ servicioForm.modalidad().errors()[0].message }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <!-- Sección Especialidades -->
+      <section class="form-section">
+        <h3 class="section-title">Especialidades Relacionadas</h3>
+        <div class="specialties-grid">
+          @for (especialidad of especialidades(); track especialidad.id) {
+            <div class="specialty-card" [class.specialty-card-active]="isEspecialidadSelected(especialidad.id)">
+              <mat-checkbox 
+                [checked]="isEspecialidadSelected(especialidad.id)"
+                (change)="toggleEspecialidad(especialidad.id, $event.checked)">
+                {{ especialidad.nombre }}
+              </mat-checkbox>
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Sección Estado -->
+      <section class="form-section">
+        <h3 class="section-title">Estado</h3>
+        <div class="checkbox-group">
+          <mat-checkbox [formField]="servicioForm.estado">
+            Servicio activo
+          </mat-checkbox>
+        </div>
+      </section>
+
+      <!-- Acciones -->
+      <div class="form-actions">
+        <button mat-stroked-button color="accent" class="primary-icon-button" type="button"
+          (click)="cancelar.emit()">
+          <mat-icon>close</mat-icon>
+          Cancelar
+        </button>
+
+        <button mat-stroked-button type="submit" [color]="isEdit() ? 'accent' : 'primary'"
+          [class.edit-icon-button]="isEdit()" [class.create-icon-button]="!isEdit()"
+          [disabled]="isSubmitting()">
+          
+          @if (isSubmitting()) {
+            <mat-icon>hourglass_top</mat-icon>
+            Guardando...
+          } @else {
+            <mat-icon>{{ isEdit() ? 'edit' : 'add_circle' }}</mat-icon>
+            {{ isEdit() ? 'Actualizar' : 'Registrar' }}
+          }
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
