@@ -53,6 +53,7 @@ export class MainLayout {
     { label: 'Usuarios', path: '/admin/usuarios', icon: 'group' },
     { label: 'Categorías', path: '/admin/categorias', icon: 'category' },
     { label: 'Especialidades', path: '/admin/especialidades', icon: 'local_hospital' },
+    { label: 'Profesionales', path: '/admin/perfiles-profesionales', icon: 'person' },
     { label: 'Servicios', path: '/admin/servicios', icon: 'medical_services' },
     { label: 'Citas', path: '/admin/citas', icon: 'event' },
     { label: 'Reportes', path: '/admin/reportes', icon: 'bar_chart' },

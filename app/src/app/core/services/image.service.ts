@@ -7,10 +7,15 @@ import { ApiResponse } from '../models/api-response.model';
 export class ImageService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/upload`;
+  private readonly imageUrl = `${environment.imageUrl}`;
 
   subir(archivo: File) {
     const formData = new FormData();
     formData.append('file', archivo);
     return this.http.post<ApiResponse<{ nombreArchivo: string }>>(this.apiUrl, formData);
+  }
+
+  getImageUrl(nombreArchivo: string): string {
+    return `${this.imageUrl}/${nombreArchivo}`;
   }
 }

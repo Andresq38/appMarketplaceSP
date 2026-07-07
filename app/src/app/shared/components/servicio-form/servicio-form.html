@@ -30,7 +30,7 @@
           <!-- Precio -->
           <mat-form-field appearance="outline">
             <mat-label>Precio (₡)</mat-label>
-            <input matInput type="number" [formField]="servicioForm.precio" step="1000" min="0" />
+            <input matInput type="number" [formField]="servicioForm.precio" step="1000" />
             @if (servicioForm.precio().touched() && servicioForm.precio().invalid()) {
               <mat-error>
                 {{ servicioForm.precio().errors()[0].message }}
@@ -41,7 +41,7 @@
           <!-- Duración en Minutos -->
           <mat-form-field appearance="outline">
             <mat-label>Duración (minutos)</mat-label>
-            <input matInput type="number" [formField]="servicioForm.duracionMinutos" step="15" min="15" />
+            <input matInput type="number" [formField]="servicioForm.duracionMinutos" step="15" />
             @if (servicioForm.duracionMinutos().touched() && servicioForm.duracionMinutos().invalid()) {
               <mat-error>
                 {{ servicioForm.duracionMinutos().errors()[0].message }}
@@ -108,11 +108,15 @@
           [disabled]="isSubmitting()">
           
           @if (isSubmitting()) {
-            <mat-icon>hourglass_top</mat-icon>
-            Guardando...
+            <ng-container>
+              <mat-icon>hourglass_top</mat-icon>
+              Guardando...
+            </ng-container>
           } @else {
-            <mat-icon>{{ isEdit() ? 'edit' : 'add_circle' }}</mat-icon>
-            {{ isEdit() ? 'Actualizar' : 'Registrar' }}
+            <ng-container>
+              <mat-icon>{{ isEdit() ? 'edit' : 'add_circle' }}</mat-icon>
+              {{ isEdit() ? 'Actualizar' : 'Registrar' }}
+            </ng-container>
           }
         </button>
       </div>

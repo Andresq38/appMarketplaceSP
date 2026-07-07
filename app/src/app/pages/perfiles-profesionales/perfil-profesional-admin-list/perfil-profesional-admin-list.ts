@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -32,6 +32,7 @@ import { PerfilProfesionalService } from '../../../core/services/perfil-profesio
 })
 export class PerfilProfesionalAdminList {
   private readonly perfilProfesionalService = inject(PerfilProfesionalService);
+  private readonly router = inject(Router);
   perfiles = signal<PerfilProfesional[]>([]);
   search = signal('');
   loading = signal(false);
@@ -89,6 +90,14 @@ export class PerfilProfesionalAdminList {
 
   clearSearch(): void {
     this.search.set('');
+  }
+
+  crearProfesional(): void {
+    this.router.navigate(['/admin/perfiles-profesionales/crear']);
+  }
+
+  editarProfesional(id: number): void {
+    this.router.navigate(['/admin/perfiles-profesionales/editar', id]);
   }
 
   getImageUrl(imageName: string | undefined): string {

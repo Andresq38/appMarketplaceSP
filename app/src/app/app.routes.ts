@@ -6,6 +6,8 @@ import { Home } from './pages/home/home';
 import { PerfilProfesionalList } from './pages/perfiles-profesionales/perfil-profesional-list/perfil-profesional-list';
 import { PerfilProfesionalDetailPage } from './pages/perfiles-profesionales/perfil-profesional-detail/perfil-profesional-detail';
 import { PerfilProfesionalAdminList } from './pages/perfiles-profesionales/perfil-profesional-admin-list/perfil-profesional-admin-list';
+import { PerfilProfesionalCreatePage } from './pages/perfiles-profesionales/perfil-profesional-create-page/perfil-profesional-create-page';
+import { PerfilProfesionalEditPage } from './pages/perfiles-profesionales/perfil-profesional-edit-page/perfil-profesional-edit-page';
 
 // Especialidades
 import { EspecialidadList } from './pages/especialidades/especialidad-list/especialidad-list';
@@ -16,6 +18,8 @@ import { EspecialidadAdminList } from './pages/especialidades/especialidad-admin
 import { ServicioList } from './pages/servicios/servicio-list/servicio-list';
 import { ServicioDetailPage } from './pages/servicios/servicio-detail/servicio-detail';
 import { ServicioAdminList } from './pages/servicios/servicio-admin-list/servicio-admin-list';
+import { ServicioCreatePage } from './pages/servicios/servicio-create-page/servicio-create-page';
+import { ServicioEditPage } from './pages/servicios/servicio-edit-page/servicio-edit-page';
 
 // Categorías
 import { CategoriaList } from './pages/categorias/categoria-list/categoria-list';
@@ -26,6 +30,8 @@ import { CategoriaAdminList } from './pages/categorias/categoria-admin-list/cate
 import { CitaList } from './pages/citas/cita-list/cita-list';
 import { CitaDetailPage } from './pages/citas/cita-detail/cita-detail';
 import { CitaAdminList } from './pages/citas/cita-admin-list/cita-admin-list';
+import { CitaCreatePage } from './pages/citas/cita-create-page/cita-create-page';
+import { CitaEditPage } from './pages/citas/cita-edit-page/cita-edit-page';
 
 // Reseñas
 import { ResenaList } from './pages/resenas/resena-list/resena-list';
@@ -140,6 +146,16 @@ export const routes: Routes = [
                 title: 'Gestión de Profesionales'
             },
             {
+                path: 'admin/perfiles-profesionales/crear',
+                component: PerfilProfesionalCreatePage,
+                title: 'Registrar Perfil Profesional'
+            },
+            {
+                path: 'admin/perfiles-profesionales/editar/:id',
+                component: PerfilProfesionalEditPage,
+                title: 'Actualizar Perfil Profesional'
+            },
+            {
                 path: 'admin/especialidades',
                 component: EspecialidadAdminList,
                 title: 'Gestión de Especialidades'
@@ -150,6 +166,16 @@ export const routes: Routes = [
                 title: 'Gestión de Servicios'
             },
             {
+                path: 'admin/servicios/crear',
+                component: ServicioCreatePage,
+                title: 'Registrar Servicio'
+            },
+            {
+                path: 'admin/servicios/editar/:id',
+                component: ServicioEditPage,
+                title: 'Actualizar Servicio'
+            },
+            {
                 path: 'admin/categorias',
                 component: CategoriaAdminList,
                 title: 'Gestión de Categorías'
@@ -158,6 +184,16 @@ export const routes: Routes = [
                 path: 'admin/citas',
                 component: CitaAdminList,
                 title: 'Gestión de Citas'
+            },
+            {
+                path: 'admin/citas/crear',
+                component: CitaCreatePage,
+                title: 'Registrar Cita'
+            },
+            {
+                path: 'admin/citas/editar/:id',
+                component: CitaEditPage,
+                title: 'Actualizar Cita'
             },
             {
                 path: 'admin/resenas',

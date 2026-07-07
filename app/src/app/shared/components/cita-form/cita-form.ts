@@ -56,7 +56,6 @@ export class CitaForm {
   citaModel = signal<CitaFormModel>({
     clienteId: null,
     profesionalId: null,
-    servicioId: null,
     fechaCita: '',
     hora: '',
     modalidad: '',
@@ -73,10 +72,9 @@ export class CitaForm {
 
       this.citaModel.set({
         clienteId: cita.clienteId ?? null,
-        profesionalId: cita.perfilProfesionalId ?? null,
-        servicioId: cita.servicioId ?? null,
+        profesionalId: cita.profesionalId ?? null,
         fechaCita: cita.fechaCita ? new Date(cita.fechaCita).toISOString().split('T')[0] : '',
-        hora: cita.horaInicio ?? '',
+        hora: cita.hora ?? '',
         modalidad: cita.modalidad ?? '',
         descripcion: cita.descripcion ?? ''
       });
@@ -115,7 +113,6 @@ export class CitaForm {
     this.citaModel.set({
       clienteId: null,
       profesionalId: null,
-      servicioId: null,
       fechaCita: '',
       hora: '',
       modalidad: '',

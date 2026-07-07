@@ -4,7 +4,7 @@
         <h1>Gestión de Profesionales</h1>
     </div>
 
-    <button mat-stroked-button color="primary" class="create-icon-button">
+    <button mat-stroked-button color="primary" class="create-icon-button" (click)="crearProfesional()">
         <mat-icon>add</mat-icon>
         Nuevo Profesional
     </button>
@@ -99,7 +99,7 @@
                     class="view-icon-button">
                     Detalle<mat-icon>visibility</mat-icon>
                 </a>
-                <button mat-stroked-button color="accent" class="edit-icon-button">
+                <button mat-stroked-button color="accent" class="edit-icon-button" (click)="editarProfesional(perfil.id)">
                     Editar<mat-icon>edit</mat-icon>
                 </button>
                 <button mat-stroked-button color="primary" class="delete-icon-button">

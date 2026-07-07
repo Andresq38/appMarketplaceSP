@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,6 +18,7 @@ import { ServicioService } from '../../../core/services/servicio.service';
 })
 export class ServicioAdminList {
   private readonly servicioService = inject(ServicioService);
+  private readonly router = inject(Router);
   servicios = signal<Servicio[]>([]);
   search = signal('');
   loading = signal(false);
@@ -47,4 +48,12 @@ export class ServicioAdminList {
   }
 
   clearSearch(): void { this.search.set(''); }
+
+  crearServicio(): void {
+    this.router.navigate(['/admin/servicios/crear']);
+  }
+
+  editarServicio(id: number): void {
+    this.router.navigate(['/admin/servicios/editar', id]);
+  }
 }

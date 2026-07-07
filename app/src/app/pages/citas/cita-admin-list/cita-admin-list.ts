@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,6 +19,7 @@ import { CitaService } from '../../../core/services/cita.service';
 })
 export class CitaAdminList {
   private readonly citaService = inject(CitaService);
+  private readonly router = inject(Router);
   citas = signal<Cita[]>([]);
   search = signal('');
   loading = signal(false);
@@ -44,4 +45,12 @@ export class CitaAdminList {
   }
 
   clearSearch(): void { this.search.set(''); }
+
+  crearCita(): void {
+    this.router.navigate(['/admin/citas/crear']);
+  }
+
+  editarCita(id: number): void {
+    this.router.navigate(['/admin/citas/editar', id]);
+  }
 }

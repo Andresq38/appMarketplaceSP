@@ -102,7 +102,7 @@ export class PerfilProfesionalForm {
         tarifaBase: Number(perfil.tarifaBase ?? 0),
         disponible: perfil.disponible ?? true,
         imagen: perfil.imagen ?? '',
-        especialidadIds: perfil.especialidades?.map((item) => item.especialidadId) ?? []
+        especialidadIds: perfil.especialidades?.map((item) => item.id) ?? []
       });
       this.selectedImageFile.set(null);
       this.imagePreview.set(
@@ -253,7 +253,7 @@ export class PerfilProfesionalForm {
       next: (response) => {
         this.perfilModel.update((value) => ({
           ...value,
-          imagen: response.nombreArchivo,
+          imagen: response.data!.nombreArchivo,
         }));
         this.selectedImageFile.set(null);
         this.emitirGuardar();

@@ -71,11 +71,15 @@
           [disabled]="isSubmitting()">
           
           @if (isSubmitting()) {
-            <mat-icon>hourglass_top</mat-icon>
-            Guardando...
+            <ng-container>
+              <mat-icon>hourglass_top</mat-icon>
+              Guardando...
+            </ng-container>
           } @else {
-            <mat-icon>{{ isEdit() ? 'edit' : 'add_circle' }}</mat-icon>
-            {{ isEdit() ? 'Actualizar' : 'Registrar' }}
+            <ng-container>
+              <mat-icon>{{ isEdit() ? 'edit' : 'add_circle' }}</mat-icon>
+              {{ isEdit() ? 'Actualizar' : 'Registrar' }}
+            </ng-container>
           }
         </button>
       </div>

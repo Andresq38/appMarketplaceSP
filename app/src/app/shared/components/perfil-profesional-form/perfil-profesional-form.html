@@ -30,7 +30,7 @@
           <!-- Años de Experiencia -->
           <mat-form-field appearance="outline">
             <mat-label>Años de Experiencia</mat-label>
-            <input matInput type="number" [formField]="perfilForm.aniosExperiencia" min="0" />
+            <input matInput type="number" [formField]="perfilForm.aniosExperiencia" />
             @if (perfilForm.aniosExperiencia().touched() && perfilForm.aniosExperiencia().invalid()) {
               <mat-error>
                 {{ perfilForm.aniosExperiencia().errors()[0].message }}
@@ -41,7 +41,7 @@
           <!-- Tarifa Base -->
           <mat-form-field appearance="outline">
             <mat-label>Tarifa Base (₡)</mat-label>
-            <input matInput type="number" [formField]="perfilForm.tarifaBase" step="1000" min="0" />
+            <input matInput type="number" [formField]="perfilForm.tarifaBase" step="1000" />
             @if (perfilForm.tarifaBase().touched() && perfilForm.tarifaBase().invalid()) {
               <mat-error>
                 {{ perfilForm.tarifaBase().errors()[0].message }}
@@ -183,11 +183,15 @@
           [disabled]="isSubmitting()">
           
           @if (isSubmitting()) {
-            <mat-icon>hourglass_top</mat-icon>
-            Guardando...
+            <ng-container>
+              <mat-icon>hourglass_top</mat-icon>
+              Guardando...
+            </ng-container>
           } @else {
-            <mat-icon>{{ isEdit() ? 'edit' : 'add_circle' }}</mat-icon>
-            {{ isEdit() ? 'Actualizar' : 'Registrar' }}
+            <ng-container>
+              <mat-icon>{{ isEdit() ? 'edit' : 'add_circle' }}</mat-icon>
+              {{ isEdit() ? 'Actualizar' : 'Registrar' }}
+            </ng-container>
           }
         </button>
       </div>
