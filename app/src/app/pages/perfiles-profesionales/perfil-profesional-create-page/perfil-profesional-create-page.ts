@@ -5,6 +5,7 @@ import { PerfilProfesionalForm } from '../../../shared/components/perfil-profesi
 import { PerfilProfesionalService } from '../../../core/services/perfil-profesional.service'
 import { EspecialidadService } from '../../../core/services/especialidad.service'
 import { UsuarioService } from '../../../core/services/usuario.service'
+import { NotificationService } from '../../../core/services/notification.service'
 import { Especialidad } from '../../../core/models/especialidad.model'
 import { Usuario } from '../../../core/models/usuario.model'
 import { PerfilProfesionalCreateDto, PerfilProfesionalUpdateDto } from '../../../core/models/perfil-profesional.model'
@@ -19,6 +20,7 @@ import { PerfilProfesionalCreateDto, PerfilProfesionalUpdateDto } from '../../..
 export class PerfilProfesionalCreatePage {
   private readonly router = inject(Router)
   private readonly perfilProfesionalService = inject(PerfilProfesionalService)
+  private readonly notificationService = inject(NotificationService)
   private readonly especialidadService = inject(EspecialidadService)
   private readonly usuarioService = inject(UsuarioService)
 
@@ -65,6 +67,7 @@ export class PerfilProfesionalCreatePage {
     this.error.set(null)
     this.perfilProfesionalService.crear(data as PerfilProfesionalCreateDto).subscribe({
       next: () => {
+        this.notificationService.success('Profesional creado correctamente')
         this.router.navigate(['/admin/perfiles-profesionales'])
       },
       error: (err) => {

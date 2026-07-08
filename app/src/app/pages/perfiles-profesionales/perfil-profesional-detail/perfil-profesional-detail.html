@@ -103,8 +103,8 @@
                 <mat-divider></mat-divider>
                 <h2>Especialidades</h2>
                 <div class="chips">
-                    @for (esp of perfil()?.especialidades; track esp.id) {
-                    <mat-chip>
+                    @for (esp of perfil()?.especialidades; track esp.id; let i = $index) {
+                    <mat-chip [class]="'chip-color-' + (i % 8)">
                         <mat-icon matChipAvatar>star</mat-icon>
                         {{ esp.nombre }}
                     </mat-chip>

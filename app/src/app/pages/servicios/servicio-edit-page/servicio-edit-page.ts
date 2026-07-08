@@ -8,6 +8,7 @@ import { ServicioService } from '../../../core/services/servicio.service'
 import { EspecialidadService } from '../../../core/services/especialidad.service'
 import { PerfilProfesionalService } from '../../../core/services/perfil-profesional.service'
 import { CategoriaService } from '../../../core/services/categoria.service'
+import { NotificationService } from '../../../core/services/notification.service'
 import { Servicio, ServicioCreateDto, ServicioUpdateDto } from '../../../core/models/servicio.model'
 import { Especialidad } from '../../../core/models/especialidad.model'
 import { PerfilProfesional } from '../../../core/models/perfil-profesional.model'
@@ -24,6 +25,7 @@ export class ServicioEditPage {
   private readonly route = inject(ActivatedRoute)
   private readonly router = inject(Router)
   private readonly servicioService = inject(ServicioService)
+  private readonly notificationService = inject(NotificationService)
   private readonly especialidadService = inject(EspecialidadService)
   private readonly perfilService = inject(PerfilProfesionalService)
   private readonly categoriaService = inject(CategoriaService)
@@ -83,6 +85,7 @@ export class ServicioEditPage {
       .actualizar(this.id, data as ServicioUpdateDto)
       .subscribe({
         next: () => {
+          this.notificationService.success('Servicio actualizado correctamente')
           this.router.navigate(['/admin/servicios'])
         },
         error: () => {

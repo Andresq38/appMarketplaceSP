@@ -6,6 +6,7 @@ import { ServicioService } from '../../../core/services/servicio.service'
 import { EspecialidadService } from '../../../core/services/especialidad.service'
 import { PerfilProfesionalService } from '../../../core/services/perfil-profesional.service'
 import { CategoriaService } from '../../../core/services/categoria.service'
+import { NotificationService } from '../../../core/services/notification.service'
 import { Especialidad } from '../../../core/models/especialidad.model'
 import { PerfilProfesional } from '../../../core/models/perfil-profesional.model'
 import { Categoria } from '../../../core/models/categoria.model'
@@ -21,6 +22,7 @@ import { ServicioCreateDto, ServicioUpdateDto } from '../../../core/models/servi
 export class ServicioCreatePage {
   private readonly router = inject(Router)
   private readonly servicioService = inject(ServicioService)
+  private readonly notificationService = inject(NotificationService)
   private readonly especialidadService = inject(EspecialidadService)
   private readonly perfilService = inject(PerfilProfesionalService)
   private readonly categoriaService = inject(CategoriaService)
@@ -64,6 +66,7 @@ export class ServicioCreatePage {
     this.error.set(null)
     this.servicioService.crear(data as ServicioCreateDto).subscribe({
       next: () => {
+        this.notificationService.success('Servicio creado correctamente')
         this.router.navigate(['/admin/servicios'])
       },
       error: () => {

@@ -110,8 +110,8 @@
             <div class="especialidades">
                 <span class="label">Especialidades:</span>
                 <div class="chips">
-                    @for (esp of perfil.especialidades; track esp.id) {
-                    <mat-chip>{{ esp.nombre }}</mat-chip>
+                    @for (esp of perfil.especialidades; track esp.id; let i = $index) {
+                    <mat-chip [class]="'chip-color-' + (i % 8)">{{ esp.nombre }}</mat-chip>
                     }
                 </div>
             </div>

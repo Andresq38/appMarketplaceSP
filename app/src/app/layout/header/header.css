@@ -94,6 +94,14 @@
     }
 }
 
+.toolbar > button[mat-flat-button] {
+    min-width: 120px;
+    height: 40px;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+    border-radius: 8px;
+}
+
 .mobile-menu-button {
     display: none;
 }

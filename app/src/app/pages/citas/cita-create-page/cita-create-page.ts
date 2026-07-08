@@ -6,6 +6,7 @@ import { CitaService } from '../../../core/services/cita.service'
 import { UsuarioService } from '../../../core/services/usuario.service'
 import { PerfilProfesionalService } from '../../../core/services/perfil-profesional.service'
 import { ServicioService } from '../../../core/services/servicio.service'
+import { NotificationService } from '../../../core/services/notification.service'
 import { Usuario } from '../../../core/models/usuario.model'
 import { PerfilProfesional } from '../../../core/models/perfil-profesional.model'
 import { Servicio } from '../../../core/models/servicio.model'
@@ -21,6 +22,7 @@ import { CitaCreateDto, CitaUpdateDto } from '../../../core/models/cita.model'
 export class CitaCreatePage {
   private readonly router = inject(Router)
   private readonly citaService = inject(CitaService)
+  private readonly notificationService = inject(NotificationService)
   private readonly usuarioService = inject(UsuarioService)
   private readonly perfilService = inject(PerfilProfesionalService)
   private readonly servicioService = inject(ServicioService)
@@ -67,6 +69,7 @@ export class CitaCreatePage {
     this.error.set(null)
     this.citaService.crear(data as CitaCreateDto).subscribe({
       next: () => {
+        this.notificationService.success('Cita creada correctamente')
         this.router.navigate(['/admin/citas'])
       },
       error: () => {

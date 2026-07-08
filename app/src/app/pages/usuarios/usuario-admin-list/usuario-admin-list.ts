@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Usuario } from '../../../core/models/usuario.model';
 import { UsuarioService } from '../../../core/services/usuario.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
@@ -20,6 +21,7 @@ import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm
 })
 export class UsuarioAdminList {
   private readonly usuarioService = inject(UsuarioService);
+  private readonly notificationService = inject(NotificationService);
   private readonly dialog = inject(MatDialog);
   usuarios = signal<Usuario[]>([]);
   search = signal('');
@@ -96,6 +98,7 @@ export class UsuarioAdminList {
         this.usuarioService.actualizar(usuario.id, { estado: usuario.estado }).subscribe({
           next: () => {
             this.loadUsuarios();
+            this.notificationService.success('Estado actualizado correctamente', 'Usuario');
           },
           error: () => {
             usuario.estado = !nuevoEstado;

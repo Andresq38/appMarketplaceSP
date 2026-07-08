@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { PerfilProfesional } from '../../../core/models/perfil-profesional.model';
 import { PerfilProfesionalService } from '../../../core/services/perfil-profesional.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
@@ -35,6 +36,7 @@ import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm
 })
 export class PerfilProfesionalAdminList {
   private readonly perfilProfesionalService = inject(PerfilProfesionalService);
+  private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
   perfiles = signal<PerfilProfesional[]>([]);
@@ -143,6 +145,7 @@ export class PerfilProfesionalAdminList {
         this.perfilProfesionalService.actualizar(perfil.id, { disponible: perfil.disponible }).subscribe({
           next: () => {
             this.loadPerfiles();
+            this.notificationService.success('Disponibilidad actualizada correctamente', 'Profesional');
           },
           error: () => {
             perfil.disponible = !nuevoEstado;
