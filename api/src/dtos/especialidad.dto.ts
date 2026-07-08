@@ -13,9 +13,11 @@ export const createEspecialidadSchema = z.object({
         .optional(),
 });
 
-export const updateEspecialidadSchema = createEspecialidadSchema.partial().extend({
+export const updateEspecialidadSchema = z.object({
+    nombre: z.string().optional(),
+    descripcion: z.string().optional(),
     estado: z.boolean().optional(),
-});
+}).passthrough();
 
 export type CreateEspecialidadDto = z.infer<typeof createEspecialidadSchema>;
 export type UpdateEspecialidadDto = z.infer<typeof updateEspecialidadSchema>;

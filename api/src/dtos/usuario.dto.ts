@@ -30,23 +30,15 @@ export const createUsuarioSchema = z.object({
         .default("CLIENTE"),
 });
 
-export const updateUsuarioSchema = createUsuarioSchema
-    .omit({ email: true, password: true })
-    .partial()
-    .extend({
-        email: z
-            .string()
-            .trim()
-            .email("El email debe ser válido")
-            .max(150, "El email no puede superar 150 caracteres")
-            .optional(),
-        password: z
-            .string()
-            .min(8, "La contraseña debe tener al menos 8 caracteres")
-            .max(255, "La contraseña no puede superar 255 caracteres")
-            .optional(),
-        estado: z.boolean().optional(),
-    });
+export const updateUsuarioSchema = z.object({
+    nombre: z.string().optional(),
+    apellidos: z.string().optional(),
+    email: z.string().optional(),
+    password: z.string().optional(),
+    telefono: z.string().optional(),
+    rol: z.enum(["ADMIN", "PROFESIONAL", "CLIENTE"]).optional(),
+    estado: z.boolean().optional(),
+}).passthrough();
 
 export type CreateUsuarioDto = z.infer<typeof createUsuarioSchema>;
 export type UpdateUsuarioDto = z.infer<typeof updateUsuarioSchema>;

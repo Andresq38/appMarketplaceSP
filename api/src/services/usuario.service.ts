@@ -131,17 +131,19 @@ export const usuarioService = {
             await this.validateEmail(data.email, id);
         }
 
+        // Construir objeto de actualización solo con campos definidos
+        const updateData: any = {};
+        if (data.nombre !== undefined) updateData.nombre = String(data.nombre);
+        if (data.apellidos !== undefined) updateData.apellidos = String(data.apellidos);
+        if (data.email !== undefined) updateData.email = String(data.email);
+        if (data.password !== undefined) updateData.password = String(data.password);
+        if (data.telefono !== undefined) updateData.telefono = String(data.telefono);
+        if (data.rol !== undefined) updateData.rol = String(data.rol);
+        if (data.estado !== undefined) updateData.estado = Boolean(data.estado);
+
         return await prisma.usuario.update({
             where: { id },
-            data: {
-                nombre: data.nombre,
-                apellidos: data.apellidos,
-                email: data.email,
-                password: data.password,
-                telefono: data.telefono,
-                rol: data.rol,
-                estado: data.estado,
-            },
+            data: updateData,
             select: {
                 id: true,
                 nombre: true,

@@ -4,10 +4,28 @@ import { CreatePerfilProfesionalDto, UpdatePerfilProfesionalDto } from "../dtos/
 
 // Función helper para transformar la respuesta de Prisma
 function transformarPerfilProfesional(perfil: any) {
-    return {
-        ...perfil,
-        especialidades: perfil.especialidades?.map((pe: any) => pe.especialidad) || [],
-    };
+    if (!perfil) return perfil;
+    
+    try {
+        // Verificar que especialidades existe y es un array
+        const especialidadesTransformadas = Array.isArray(perfil.especialidades)
+            ? perfil.especialidades
+                .filter((pe: any) => pe && pe.especialidad)
+                .map((pe: any) => pe.especialidad)
+            : [];
+
+        return {
+            ...perfil,
+            especialidades: especialidadesTransformadas,
+        };
+    } catch (error) {
+        console.error('Error transformando perfil:', error, perfil);
+        // Si hay error, devolver el perfil sin transformar
+        return {
+            ...perfil,
+            especialidades: [],
+        };
+    }
 }
 
 export const perfilProfesionalService = {
@@ -47,7 +65,7 @@ export const perfilProfesionalService = {
     },
 
     async listar() {
-        const perfiles = await prisma.perfilProfesional.findMany({
+        return await prisma.perfilProfesional.findMany({
             include: {
                 usuario: true,
                 servicios: true,
@@ -58,7 +76,6 @@ export const perfilProfesionalService = {
                 },
             },
         });
-        return perfiles.map(transformarPerfilProfesional);
     },
 
     async obtenerPorId(id: number) {
@@ -79,7 +96,7 @@ export const perfilProfesionalService = {
             throw AppError.notFound("Perfil profesional no encontrado");
         }
 
-        return transformarPerfilProfesional(perfil);
+        return perfil;
     },
 
     async obtenerPorUsuarioId(usuarioId: number) {
@@ -100,7 +117,7 @@ export const perfilProfesionalService = {
             throw AppError.notFound("Perfil profesional no encontrado");
         }
 
-        return transformarPerfilProfesional(perfil);
+        return perfil;
     },
 
     async crear(data: CreatePerfilProfesionalDto) {
@@ -120,7 +137,7 @@ export const perfilProfesionalService = {
             throw AppError.conflict("El usuario ya tiene un perfil profesional");
         }
 
-        const perfil = await prisma.perfilProfesional.create({
+        return await prisma.perfilProfesional.create({
             data: {
                 usuarioId: data.usuarioId,
                 titulo: data.titulo,
@@ -152,13 +169,11 @@ export const perfilProfesionalService = {
                 },
             },
         });
-
-        return transformarPerfilProfesional(perfil);
     },
 
     async actualizar(id: number, data: UpdatePerfilProfesionalDto) {
         // Validar que el perfil exista
-        const perfil = await prisma.perfilProfesional.findUnique({
+        let perfil = await prisma.perfilProfesional.findUnique({
             where: { id },
             include: { usuario: true },
         });
@@ -188,41 +203,35 @@ export const perfilProfesionalService = {
             });
         }
 
-        perfil = await prisma.perfilProfesional.update({
+        // Construir objeto de actualización dinámicamente
+        let updateData: any = {};
+        if (data.titulo !== undefined) updateData.titulo = data.titulo;
+        if (data.descripcion !== undefined) updateData.descripcion = data.descripcion;
+        if (data.aniosExperiencia !== undefined) updateData.aniosExperiencia = data.aniosExperiencia;
+        if (data.modalidad !== undefined) updateData.modalidad = data.modalidad;
+        if (data.provincia !== undefined) updateData.provincia = data.provincia;
+        if (data.canton !== undefined) updateData.canton = data.canton;
+        if (data.distrito !== undefined) updateData.distrito = data.distrito;
+        if (data.tarifaBase !== undefined) updateData.tarifaBase = data.tarifaBase;
+        if (data.imagen !== undefined) updateData.imagen = data.imagen;
+        if (data.disponible !== undefined) updateData.disponible = data.disponible;
+        if (data.activo !== undefined) updateData.activo = data.activo;
+
+        if (data.especialidadIds) {
+            updateData.especialidades = {
+                deleteMany: {},
+                create: data.especialidadIds.map((id) => ({
+                    especialidadId: id,
+                })),
+            };
+        }
+
+        await prisma.perfilProfesional.update({
             where: { id },
-            data: {
-                titulo: data.titulo,
-                descripcion: data.descripcion,
-                aniosExperiencia: data.aniosExperiencia,
-                modalidad: data.modalidad,
-                provincia: data.provincia,
-                canton: data.canton,
-                distrito: data.distrito,
-                tarifaBase: data.tarifaBase,
-                ...(data.imagen !== undefined && { imagen: data.imagen }),
-                disponible: data.disponible,
-                activo: data.activo,
-                especialidades: data.especialidadIds
-                    ? {
-                        deleteMany: {},
-                        create: data.especialidadIds.map((id) => ({
-                            especialidadId: id,
-                        })),
-                    }
-                    : undefined,
-            },
-            include: {
-                usuario: true,
-                servicios: true,
-                especialidades: {
-                    include: {
-                        especialidad: true,
-                    },
-                },
-            },
+            data: updateData,
         });
 
-        return transformarPerfilProfesional(perfil);
+        return { id };
     },
 
     async eliminar(id: number) {

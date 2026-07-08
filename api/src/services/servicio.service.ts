@@ -143,16 +143,7 @@ export const servicioService = {
     },
 
     async actualizar(id: number, data: UpdateServicioDto) {
-        // Validar que el servicio exista
-        const servicio = await prisma.servicio.findUnique({
-            where: { id },
-        });
-
-        if (!servicio) {
-            throw AppError.notFound("Servicio no encontrado");
-        }
-
-        // Validar relaciones si se actualizan
+        // Validar relaciones y especialidades ANTES de la transacción
         if (data.perfilId) {
             await this.validatePerfil(data.perfilId);
         }
@@ -161,42 +152,54 @@ export const servicioService = {
             await this.validateCategoria(data.categoriaId);
         }
 
-        if (data.especialidadIds) {
-            if (data.especialidadIds.length > 0) {
-                await this.validateEspecialidades(data.especialidadIds);
-            }
+        if (data.especialidadIds && data.especialidadIds.length > 0) {
+            await this.validateEspecialidades(data.especialidadIds);
         }
 
-        return await prisma.servicio.update({
-            where: { id },
-            data: {
-                ...(data.nombre !== undefined && { nombre: data.nombre }),
-                ...(data.descripcion !== undefined && { descripcion: data.descripcion }),
-                ...(data.precio !== undefined && { precio: data.precio }),
-                ...(data.duracionMinutos !== undefined && { duracionMinutos: data.duracionMinutos }),
-                ...(data.modalidad !== undefined && { modalidad: data.modalidad }),
-                ...(data.estado !== undefined && { estado: data.estado }),
-                ...(data.perfilId !== undefined && { perfilId: data.perfilId }),
-                ...(data.categoriaId !== undefined && { categoriaId: data.categoriaId }),
-                ...(data.especialidadIds && {
-                    especialidades: {
-                        deleteMany: {},
-                        create: data.especialidadIds.map((id) => ({
-                            especialidadId: id,
+        await prisma.$transaction(async (tx) => {
+            // Validar que el servicio exista
+            const servicio = await tx.servicio.findUnique({
+                where: { id },
+            });
+
+            if (!servicio) {
+                throw AppError.notFound("Servicio no encontrado");
+            }
+
+            // Manejar especialidades por separado
+            if (data.especialidadIds !== undefined) {
+                await tx.servicioEspecialidad.deleteMany({
+                    where: { servicioId: id },
+                });
+
+                if (data.especialidadIds.length > 0) {
+                    await tx.servicioEspecialidad.createMany({
+                        data: data.especialidadIds.map((especialidadId) => ({
+                            servicioId: id,
+                            especialidadId,
                         })),
-                    }
-                }),
-            },
-            include: {
-                perfil: true,
-                categoria: true,
-                especialidades: {
-                    include: {
-                        especialidad: true,
-                    },
-                },
-            },
+                    });
+                }
+            }
+
+            // Construir objeto de actualización solo con campos definidos
+            let updateData: any = {};
+            if (data.nombre !== undefined) updateData.nombre = data.nombre;
+            if (data.descripcion !== undefined) updateData.descripcion = data.descripcion;
+            if (data.precio !== undefined) updateData.precio = Number(data.precio);
+            if (data.duracionMinutos !== undefined) updateData.duracionMinutos = Number(data.duracionMinutos);
+            if (data.modalidad !== undefined) updateData.modalidad = data.modalidad;
+            if (data.estado !== undefined) updateData.estado = Boolean(data.estado);
+            if (data.perfilId !== undefined) updateData.perfilId = Number(data.perfilId);
+            if (data.categoriaId !== undefined) updateData.categoriaId = Number(data.categoriaId);
+
+            await tx.servicio.update({
+                where: { id },
+                data: updateData,
+            });
         });
+
+        return { id };
     },
 
     async eliminar(id: number) {

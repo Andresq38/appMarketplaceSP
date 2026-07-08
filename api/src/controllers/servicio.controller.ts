@@ -34,9 +34,16 @@ export class ServicioController {
     };
 
     actualizar = async (request: Request, response: Response, next: NextFunction) => {
-        const id = parseId(request.params.id);
-        const servicio = await servicioService.actualizar(id, request.body);
-        return sendSuccess(response, servicio, "Servicio actualizado correctamente", StatusCodes.OK);
+        try {
+            const id = parseId(request.params.id);
+            console.log("🔵 Iniciando actualizar servicio:", id, request.body);
+            const servicio = await servicioService.actualizar(id, request.body);
+            console.log("🟢 Actualización exitosa, retornando:", servicio);
+            return sendSuccess(response, servicio, "Servicio actualizado correctamente", StatusCodes.OK);
+        } catch (error) {
+            console.error("❌ Error en actualizar:", error);
+            next(error);
+        }
     };
 
     eliminar = async (request: Request, response: Response, next: NextFunction) => {

@@ -53,6 +53,10 @@ export const createPerfilProfesionalSchema = z.object({
 });
 
 export const updatePerfilProfesionalSchema = z.object({
+    nombre: z.string().optional(),
+    apellidos: z.string().optional(),
+    email: z.string().email("Email inválido").optional(),
+    telefono: z.string().optional(),
     titulo: z.string().optional(),
     descripcion: z.string().optional(),
     aniosExperiencia: z.number().int().optional(),

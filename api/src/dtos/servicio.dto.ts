@@ -38,12 +38,16 @@ export const createServicioSchema = z.object({
         .optional(),
 });
 
-export const updateServicioSchema = createServicioSchema
-    .omit({ perfilId: true })
-    .partial()
-    .extend({
-        estado: z.boolean().optional(),
-    });
+export const updateServicioSchema = z.object({
+    categoriaId: z.number().int().optional(),
+    nombre: z.string().optional(),
+    descripcion: z.string().optional(),
+    precio: z.number().optional(),
+    duracionMinutos: z.number().int().optional(),
+    modalidad: z.enum(["VIRTUAL", "PRESENCIAL", "MIXTO"]).optional(),
+    estado: z.boolean().optional(),
+    especialidadIds: z.array(z.number().int().positive()).optional(),
+}).passthrough();
 
 export type CreateServicioDto = z.infer<typeof createServicioSchema>;
 export type UpdateServicioDto = z.infer<typeof updateServicioSchema>;

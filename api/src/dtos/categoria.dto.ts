@@ -13,9 +13,11 @@ export const createCategoriaSchema = z.object({
         .optional(),
 });
 
-export const updateCategoriaSchema = createCategoriaSchema.partial().extend({
+export const updateCategoriaSchema = z.object({
+    nombre: z.string().optional(),
+    descripcion: z.string().optional(),
     estado: z.boolean().optional(),
-});
+}).passthrough();
 
 export type CreateCategoriaDto = z.infer<typeof createCategoriaSchema>;
 export type UpdateCategoriaDto = z.infer<typeof updateCategoriaSchema>;

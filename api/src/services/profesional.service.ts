@@ -136,55 +136,58 @@ export const profesionalService = {
     },
 
     async actualizar(id: number, data: UpdatePerfilProfesionalDto) {
-        // Validar que el profesional exista
-        const profesional = await prisma.perfilProfesional.findUnique({
-            where: { id },
-        });
-
-        if (!profesional) {
-            throw AppError.notFound("Profesional no encontrado");
+        // Validar especialidades ANTES de la transacción
+        if (data.especialidadIds && data.especialidadIds.length > 0) {
+            await this.validateEspecialidades(data.especialidadIds);
         }
 
-        // Validar especialidades si se actualizan
-        if (data.especialidadIds) {
-            if (data.especialidadIds.length > 0) {
-                await this.validateEspecialidades(data.especialidadIds);
+        await prisma.$transaction(async (tx) => {
+            const profesional = await tx.perfilProfesional.findUnique({
+                where: { id },
+            });
+
+            if (!profesional) {
+                throw AppError.notFound("Profesional no encontrado");
             }
-        }
 
-        return await prisma.perfilProfesional.update({
-            where: { id },
-            data: {
-                titulo: data.titulo,
-                descripcion: data.descripcion,
-                aniosExperiencia: data.aniosExperiencia,
-                modalidad: data.modalidad,
-                provincia: data.provincia,
-                canton: data.canton,
-                distrito: data.distrito,
-                tarifaBase: data.tarifaBase,
-                imagen: data.imagen,
-                disponible: data.disponible,
-                activo: data.activo,
-                especialidades: data.especialidadIds
-                    ? {
-                        deleteMany: {},
-                        create: data.especialidadIds.map((id) => ({
-                            especialidadId: id,
+            // Manejar especialidades por separado
+            if (data.especialidadIds !== undefined) {
+                await tx.perfilEspecialidad.deleteMany({
+                    where: { perfilId: id },
+                });
+
+                if (data.especialidadIds.length > 0) {
+                    await tx.perfilEspecialidad.createMany({
+                        data: data.especialidadIds.map((especialidadId) => ({
+                            perfilId: id,
+                            especialidadId,
                         })),
-                    }
-                    : undefined,
-            },
-            include: {
-                usuario: true,
-                servicios: true,
-                especialidades: {
-                    include: {
-                        especialidad: true,
-                    },
-                },
-            },
+                    });
+                }
+            }
+
+            // Construir objeto de actualización solo con campos definidos
+            let updateData: any = {};
+            
+            if (data.titulo !== undefined) updateData.titulo = data.titulo;
+            if (data.descripcion !== undefined) updateData.descripcion = data.descripcion;
+            if (data.aniosExperiencia !== undefined) updateData.aniosExperiencia = Number(data.aniosExperiencia);
+            if (data.modalidad !== undefined) updateData.modalidad = data.modalidad;
+            if (data.provincia !== undefined) updateData.provincia = data.provincia;
+            if (data.canton !== undefined) updateData.canton = data.canton;
+            if (data.distrito !== undefined) updateData.distrito = data.distrito;
+            if (data.tarifaBase !== undefined) updateData.tarifaBase = Number(data.tarifaBase);
+            if (data.imagen !== undefined) updateData.imagen = data.imagen;
+            if (data.disponible !== undefined) updateData.disponible = Boolean(data.disponible);
+            if (data.activo !== undefined) updateData.activo = Boolean(data.activo);
+
+            await tx.perfilProfesional.update({
+                where: { id },
+                data: updateData,
+            });
         });
+
+        return { id };
     },
 
     async eliminar(id: number) {

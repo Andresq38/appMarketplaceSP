@@ -114,7 +114,7 @@ export class PerfilProfesionalForm {
         tarifaBase: Number(perfil.tarifaBase ?? 0),
         disponible: perfil.disponible ?? true,
         imagen: perfil.imagen ?? '',
-        especialidadIds: perfil.especialidades?.map((item: any) => item.especialidad?.id) ?? []
+        especialidadIds: perfil.especialidades?.map((item: any) => item.id) ?? []
       });
       this.selectedImageFile.set(null);
       this.imagePreview.set(

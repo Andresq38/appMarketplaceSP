@@ -80,13 +80,15 @@ export const categoriaService = {
             }
         }
 
+        // Construir objeto de actualización solo con campos definidos
+        const updateData: any = {};
+        if (data.nombre !== undefined) updateData.nombre = String(data.nombre);
+        if (data.descripcion !== undefined) updateData.descripcion = String(data.descripcion);
+        if (data.estado !== undefined) updateData.estado = Boolean(data.estado);
+
         return await prisma.categoria.update({
             where: { id },
-            data: {
-                nombre: data.nombre,
-                descripcion: data.descripcion,
-                estado: data.estado,
-            },
+            data: updateData,
             include: {
                 servicios: true,
             },

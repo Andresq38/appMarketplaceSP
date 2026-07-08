@@ -28,9 +28,16 @@ export class PerfilProfesionalController {
     };
 
     actualizar = async (request: Request, response: Response, next: NextFunction) => {
-        const id = parseId(request.params.id);
-        const perfil = await perfilProfesionalService.actualizar(id, request.body);
-        return sendSuccess(response, perfil, "Perfil profesional actualizado correctamente", StatusCodes.OK);
+        try {
+            const id = parseId(request.params.id);
+            console.log("🔵 Iniciando actualizar perfil:", id, request.body);
+            const perfil = await perfilProfesionalService.actualizar(id, request.body);
+            console.log("🟢 Actualización exitosa, retornando:", perfil);
+            return sendSuccess(response, perfil, "Perfil profesional actualizado correctamente", StatusCodes.OK);
+        } catch (error) {
+            console.error("❌ Error en actualizar:", error);
+            next(error);
+        }
     };
 
     eliminar = async (request: Request, response: Response, next: NextFunction) => {

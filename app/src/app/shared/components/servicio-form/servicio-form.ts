@@ -92,7 +92,7 @@ export class ServicioForm {
         duracionMinutos: servicio.duracionMinutos ?? 0,
         modalidad: servicio.modalidad ?? '',
         estado: servicio.estado ?? true,
-        especialidadIds: servicio.especialidades?.map((item: any) => item.especialidad?.id) ?? []
+        especialidadIds: servicio.especialidades?.map((item: any) => item.id) ?? []
       });
     });
   }
