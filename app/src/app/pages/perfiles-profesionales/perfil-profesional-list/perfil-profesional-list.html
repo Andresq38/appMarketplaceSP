@@ -60,7 +60,13 @@
     @for (perfil of perfilesFiltrados(); track perfil.id) {
     <mat-card class="professional-card">
         <div class="card-image">
-            <img [src]="getImageUrl(perfil.imagen)" [alt]="perfil.usuario?.nombre" />
+            @if (getImageUrl(perfil.imagen)) {
+                <img [src]="getImageUrl(perfil.imagen)" [alt]="perfil.usuario?.nombre" />
+            } @else {
+                <div class="no-image">
+                    <mat-icon>person</mat-icon>
+                </div>
+            }
             @if (perfil.disponible) {
             <span class="availability available">Disponible</span>
             } @else {
@@ -70,7 +76,13 @@
 
         <mat-card-header>
             <div mat-card-avatar class="card-avatar">
-                <img [src]="getImageUrl(perfil.imagen)" [alt]="perfil.usuario?.nombre" />
+                @if (getImageUrl(perfil.imagen)) {
+                    <img [src]="getImageUrl(perfil.imagen)" [alt]="perfil.usuario?.nombre" />
+                } @else {
+                    <div class="no-image-small">
+                        <mat-icon>person</mat-icon>
+                    </div>
+                }
             </div>
             <mat-card-title>{{ perfil.usuario?.nombre }} {{ perfil.usuario?.apellidos }}</mat-card-title>
             <mat-card-subtitle>{{ perfil.titulo }}</mat-card-subtitle>

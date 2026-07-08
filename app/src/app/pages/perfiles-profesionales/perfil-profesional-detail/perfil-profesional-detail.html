@@ -20,7 +20,13 @@
     <mat-card class="profile-card">
         <div class="profile-header">
             <div class="profile-image">
-                <img [src]="getImageUrl(perfil()?.imagen)" [alt]="perfil()?.usuario?.nombre" />
+                @if (getImageUrl(perfil()?.imagen)) {
+                    <img [src]="getImageUrl(perfil()?.imagen)" [alt]="perfil()?.usuario?.nombre" />
+                } @else {
+                    <div class="no-image-large">
+                        <mat-icon>person</mat-icon>
+                    </div>
+                }
                 @if (perfil()?.disponible) {
                 <span class="availability available">Disponible</span>
                 } @else {

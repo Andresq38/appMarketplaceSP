@@ -114,7 +114,7 @@ export class PerfilProfesionalForm {
         tarifaBase: Number(perfil.tarifaBase ?? 0),
         disponible: perfil.disponible ?? true,
         imagen: perfil.imagen ?? '',
-        especialidadIds: perfil.especialidades?.map((item) => item.id) ?? []
+        especialidadIds: perfil.especialidades?.map((item: any) => item.especialidad?.id) ?? []
       });
       this.selectedImageFile.set(null);
       this.imagePreview.set(
@@ -151,9 +151,10 @@ export class PerfilProfesionalForm {
     required(path.correo, {
       message: 'El correo es obligatorio'
     })
-    validate(path.correo, (value) => {
+    validate(path.correo, (ctx) => {
+      const correo = String(ctx.value()).trim()
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(String(value)) ? null : [{ kind: 'email', message: 'Correo inválido' }];
+      return emailRegex.test(correo) ? null : { kind: 'email', message: 'Correo inválido' }
     })
 
     required(path.telefono, {
@@ -326,11 +327,12 @@ export class PerfilProfesionalForm {
         distrito: value.distrito.trim(),
         tarifaBase: Number(value.tarifaBase),
         disponible: value.disponible,
+        imagen: value.imagen || undefined,
         especialidadIds: value.especialidadIds
       };
     }
     
-    // CREATE mode: no incluir datos de usuario
+    // CREATE mode: incluir imagen
     return {
       usuarioId: value.usuarioId as number,
       titulo: value.titulo.trim(),
@@ -342,6 +344,7 @@ export class PerfilProfesionalForm {
       distrito: value.distrito.trim(),
       tarifaBase: Number(value.tarifaBase),
       disponible: value.disponible,
+      imagen: value.imagen || undefined,
       especialidadIds: value.especialidadIds
     };
   }
@@ -350,6 +353,7 @@ export class PerfilProfesionalForm {
     if (!usuarioId) {
       this.perfilModel.update(value => ({
         ...value,
+        usuarioId: null,
         nombre: '',
         apellidos: '',
         correo: '',
@@ -362,6 +366,7 @@ export class PerfilProfesionalForm {
     if (usuario) {
       this.perfilModel.update(value => ({
         ...value,
+        usuarioId: usuarioId,
         nombre: usuario.nombre,
         apellidos: usuario.apellidos,
         correo: usuario.email,
@@ -406,7 +411,6 @@ export class PerfilProfesionalForm {
 
   private emitirGuardar() {
     const dto = this.buildDto();
-    console.log('JSON enviado al API:', dto);
     this.guardar.emit(dto);
   }
 }

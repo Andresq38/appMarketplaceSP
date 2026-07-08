@@ -90,7 +90,6 @@ export class PerfilProfesionalList {
       next: (response) => {
         this.perfiles.set(response.data);
         this.loading.set(false);
-        console.log('Perfiles cargados:', response.data);
       },
       error: () => {
         this.error.set('No se pudieron cargar los profesionales.');
@@ -104,8 +103,8 @@ export class PerfilProfesionalList {
     this.modalidadFilter.set(null);
   }
 
-  getImageUrl(imageName: string | undefined): string {
-    if (!imageName) return 'assets/default-profile.png';
+  getImageUrl(imageName: string | undefined): string | null {
+    if (!imageName) return null;
     return this.perfilProfesionalService.getImageUrl(imageName);
   }
 

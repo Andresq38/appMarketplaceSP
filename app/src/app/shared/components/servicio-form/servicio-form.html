@@ -66,7 +66,7 @@
           <!-- Precio -->
           <mat-form-field appearance="outline">
             <mat-label>Precio (₡)</mat-label>
-            <input matInput type="number" [formField]="servicioForm.precio" step="1000" />
+            <input matInput type="number" [formField]="servicioForm.precio" step="1" />
             @if (servicioForm.precio().touched() && servicioForm.precio().invalid()) {
               <mat-error>
                 {{ servicioForm.precio().errors()[0].message }}

@@ -216,7 +216,6 @@ export class ServicioForm {
     this.marcarCamposComoTocados();
     if (this.formularioInvalido()) return;
     const dto = this.buildDto();
-    console.log('JSON enviado al API:', dto);
     this.guardar.emit(dto);
   }
 }

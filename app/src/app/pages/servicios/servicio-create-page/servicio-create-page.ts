@@ -62,7 +62,6 @@ export class ServicioCreatePage {
   guardar(data: ServicioCreateDto | ServicioUpdateDto) {
     this.saving.set(true)
     this.error.set(null)
-    console.log('Data: ', data)
     this.servicioService.crear(data as ServicioCreateDto).subscribe({
       next: () => {
         this.router.navigate(['/admin/servicios'])

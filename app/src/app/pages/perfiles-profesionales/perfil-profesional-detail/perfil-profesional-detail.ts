@@ -61,8 +61,8 @@ export class PerfilProfesionalDetailPage implements OnInit {
     });
   }
 
-  getImageUrl(imageName: string | undefined): string {
-    if (!imageName) return 'assets/default-profile.png';
+  getImageUrl(imageName: string | undefined): string | null {
+    if (!imageName) return null;
     return this.perfilProfesionalService.getImageUrl(imageName);
   }
 

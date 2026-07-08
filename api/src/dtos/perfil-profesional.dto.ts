@@ -41,7 +41,7 @@ export const createPerfilProfesionalSchema = z.object({
         .max(100, "El distrito no puede superar 100 caracteres"),
     tarifaBase: z
         .number()
-        .positive("La tarifa base debe ser mayor a 0"),
+        .min(1, "La tarifa base debe ser mayor a 0"),
     imagen: z
         .string()
         .trim()

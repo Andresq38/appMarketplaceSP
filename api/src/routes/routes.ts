@@ -20,7 +20,7 @@ export class AppRoutes {
         router.use('/servicio', ServicioRoutes.routes);
         router.use('/cita', CitaRoutes.routes);
         router.use('/resena', ResenaRoutes.routes);
-        router.use('/images', ImageRoutes.routes);
+        router.use('/upload', ImageRoutes.routes);
         return router;
     }
 }

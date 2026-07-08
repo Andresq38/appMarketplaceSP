@@ -76,7 +76,7 @@
 
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Correo Electrónico</mat-label>
-                <input matInput type="email" [formField]="perfilForm.correo" />
+                <input matInput type="text" [formField]="perfilForm.correo" />
                 @if (perfilForm.correo().touched() && perfilForm.correo().invalid()) {
                   <mat-error>
                     {{ perfilForm.correo().errors()[0].message }}
@@ -132,7 +132,7 @@
           <!-- Tarifa Base -->
           <mat-form-field appearance="outline">
             <mat-label>Tarifa Base (₡)</mat-label>
-            <input matInput type="number" [formField]="perfilForm.tarifaBase" step="1000" />
+            <input matInput type="number" [formField]="perfilForm.tarifaBase" step="1" />
             @if (perfilForm.tarifaBase().touched() && perfilForm.tarifaBase().invalid()) {
               <mat-error>
                 {{ perfilForm.tarifaBase().errors()[0].message }}

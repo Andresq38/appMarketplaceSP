@@ -80,7 +80,6 @@ export class CitaEditPage {
 
     this.saving.set(true)
     this.error.set(null)
-    console.log('Data: ', data)
 
     this.citaService
       .actualizar(this.id, data as CitaUpdateDto)

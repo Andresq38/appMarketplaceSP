@@ -78,7 +78,6 @@ export class ServicioEditPage {
 
     this.saving.set(true)
     this.error.set(null)
-    console.log('Data: ', data)
 
     this.servicioService
       .actualizar(this.id, data as ServicioUpdateDto)

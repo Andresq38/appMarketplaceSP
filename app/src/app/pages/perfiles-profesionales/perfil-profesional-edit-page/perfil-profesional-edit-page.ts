@@ -66,7 +66,6 @@ export class PerfilProfesionalEditPage {
 
     this.saving.set(true)
     this.error.set(null)
-    console.log('Data: ', data)
 
     this.perfilProfesionalService
       .actualizar(this.id, data as PerfilProfesionalUpdateDto)

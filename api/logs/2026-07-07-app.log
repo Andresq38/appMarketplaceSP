@@ -1,0 +1,1 @@
+{"level":"warn","message":"Datos de entrada inválidos","method":"PUT","name":"BadRequestError","path":"/api/perfil-profesional/11","statusCode":400,"timestamp":"2026-07-07 18:59:54.176","validationErrors":[{"field":"especialidadIds.0","message":"Invalid input: expected number, received null"}]}

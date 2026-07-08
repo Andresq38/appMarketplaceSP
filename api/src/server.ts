@@ -4,7 +4,7 @@ import cors from "cors";
 import morgan from "morgan";
 import { AppRoutes } from "./routes/routes";
 import { ErrorMiddleware } from "./middlewares/error.middleware";
-import path from "path/win32";
+import path from "path";
 
 const app = express();
 // Acceder a la configuracion del archivo .env

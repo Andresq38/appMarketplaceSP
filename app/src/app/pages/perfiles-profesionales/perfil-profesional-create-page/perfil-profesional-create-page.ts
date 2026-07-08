@@ -63,13 +63,12 @@ export class PerfilProfesionalCreatePage {
   guardar(data: PerfilProfesionalCreateDto | PerfilProfesionalUpdateDto) {
     this.saving.set(true)
     this.error.set(null)
-    console.log('Data: ', data)
     this.perfilProfesionalService.crear(data as PerfilProfesionalCreateDto).subscribe({
       next: () => {
         this.router.navigate(['/admin/perfiles-profesionales'])
       },
-      error: () => {
-        this.error.set('No se pudo registrar el perfil profesional')
+      error: (err) => {
+        this.error.set(err.error?.message || 'No se pudo registrar el perfil profesional')
       },
       complete: () => {
         this.saving.set(false)

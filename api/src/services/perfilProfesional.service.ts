@@ -188,7 +188,7 @@ export const perfilProfesionalService = {
                 canton: data.canton,
                 distrito: data.distrito,
                 tarifaBase: data.tarifaBase,
-                imagen: data.imagen,
+                ...(data.imagen !== undefined && { imagen: data.imagen }),
                 disponible: data.disponible,
                 activo: data.activo,
                 especialidades: data.especialidadIds

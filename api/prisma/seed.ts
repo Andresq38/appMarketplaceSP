@@ -45,6 +45,8 @@ async function main() {
             { nombre: "Pediatría", descripcion: "Médico especialista en niños" },
             { nombre: "Endodoncia", descripcion: "Especialista en tratamiento de conductos" },
             { nombre: "Psicología Clínica", descripcion: "Especialista en psicología clínica" },
+            { nombre: "Nutrición Clínica", descripcion: "Especialista en evaluación y tratamiento nutricional" },
+            { nombre: "Nutrición Deportiva", descripcion: "Especialista en alimentación para el rendimiento físico" },
         ],
     });
 

@@ -259,6 +259,24 @@
     color: var(--mat-sys-error);
 }
 
+.no-image-large {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+    
+    mat-icon {
+        font-size: 4rem;
+        width: 4rem;
+        height: 4rem;
+        opacity: 0.5;
+    }
+}
+
 @media (max-width: 768px) {
     .profile-header {
         grid-template-columns: 1fr;

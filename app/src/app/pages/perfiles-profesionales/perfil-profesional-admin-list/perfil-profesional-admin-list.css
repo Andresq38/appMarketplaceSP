@@ -134,6 +134,23 @@
     color: var(--mat-sys-error);
 }
 
+.no-image-small {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    
+    mat-icon {
+        font-size: 1.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        opacity: 0.5;
+    }
+}
+
 @media (max-width: 760px) {
     .admin-header {
         flex-direction: column;

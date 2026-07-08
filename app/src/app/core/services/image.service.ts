@@ -11,7 +11,7 @@ export class ImageService {
 
   subir(archivo: File) {
     const formData = new FormData();
-    formData.append('file', archivo);
+    formData.append('image', archivo);
     return this.http.post<ApiResponse<{ nombreArchivo: string }>>(this.apiUrl, formData);
   }
 

@@ -65,7 +65,6 @@ export class CitaCreatePage {
   guardar(data: CitaCreateDto | CitaUpdateDto) {
     this.saving.set(true)
     this.error.set(null)
-    console.log('Data: ', data)
     this.citaService.crear(data as CitaCreateDto).subscribe({
       next: () => {
         this.router.navigate(['/admin/citas'])
