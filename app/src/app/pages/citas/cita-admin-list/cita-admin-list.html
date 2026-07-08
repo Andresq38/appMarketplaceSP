@@ -8,7 +8,39 @@
         <input matInput [(ngModel)]="search" />
         <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
-    <button mat-stroked-button (click)="clearSearch()">Limpiar</button>
+
+    <div class="estado-filters">
+        @for (estado of estados; track estado) {
+        <button mat-stroked-button
+            [color]="filtroEstado() === estado ? 'primary' : ''"
+            (click)="filtroEstado() === estado ? filtroEstado.set(null) : filtroEstado.set(estado)">
+            {{ estado }}
+        </button>
+        }
+    </div>
+
+    <div class="profesional-filters">
+        @for (prof of profesionales(); track prof.id) {
+        <button mat-stroked-button
+            [color]="filtroProfesional() === prof.id ? 'primary' : ''"
+            (click)="filtroProfesional() === prof.id ? filtroProfesional.set(null) : filtroProfesional.set(prof.id)">
+            {{ prof.nombre }} {{ prof.apellidos }}
+        </button>
+        }
+    </div>
+
+    <div class="fecha-filters">
+        <mat-form-field appearance="outline">
+            <mat-label>Desde</mat-label>
+            <input matInput type="date" [(ngModel)]="filtroFechaDesde" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Hasta</mat-label>
+            <input matInput type="date" [(ngModel)]="filtroFechaHasta" />
+        </mat-form-field>
+    </div>
+
+    <button mat-stroked-button (click)="clearSearch()">Limpiar Filtros</button>
 </section>
 <p class="summary">{{ totalCitas() }} citas</p>
 @if (loading()) { <div class="state"><mat-spinner diameter="42" /></div> }
@@ -16,13 +48,17 @@
 @else {
 <div class="table-wrapper">
     <table mat-table [dataSource]="citasFiltradas()">
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let c">{{ c.id }}</td>
+        </ng-container>
         <ng-container matColumnDef="profesional">
             <th mat-header-cell *matHeaderCellDef>Profesional</th>
-            <td mat-cell *matCellDef="let c">{{ c.profesionalId }}</td>
+            <td mat-cell *matCellDef="let c">{{ c.profesional?.usuario?.nombre }} {{ c.profesional?.usuario?.apellidos }}</td>
         </ng-container>
         <ng-container matColumnDef="cliente">
             <th mat-header-cell *matHeaderCellDef>Cliente</th>
-            <td mat-cell *matCellDef="let c">{{ c.clienteId }}</td>
+            <td mat-cell *matCellDef="let c">{{ c.cliente?.nombre }} {{ c.cliente?.apellidos }}</td>
         </ng-container>
         <ng-container matColumnDef="fecha">
             <th mat-header-cell *matHeaderCellDef>Fecha</th>

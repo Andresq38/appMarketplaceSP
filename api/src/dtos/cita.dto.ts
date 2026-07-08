@@ -10,23 +10,34 @@ export const createCitaSchema = z.object({
     perfilProfesionalId: z
         .number()
         .int()
-        .positive("El profesional es obligatorio"),
+        .positive("El profesional es obligatorio")
+        .optional(),
+    profesionalId: z
+        .number()
+        .int()
+        .positive("El profesional es obligatorio")
+        .optional(),
     servicioId: z
         .number()
         .int()
-        .positive("El servicio es obligatorio"),
+        .optional(),
     fechaSolicitada: z
         .string()
-        .datetime("La fecha solicitada debe ser válida"),
+        .optional(),
     fechaCita: z
-        .string()
-        .datetime("La fecha de la cita debe ser válida"),
+        .string(),
     horaInicio: z
         .string()
-        .regex(horaRegex, "La hora debe estar en formato HH:mm"),
+        .regex(horaRegex, "La hora debe estar en formato HH:mm")
+        .optional(),
+    hora: z
+        .string()
+        .regex(horaRegex, "La hora debe estar en formato HH:mm")
+        .optional(),
     horaFin: z
         .string()
-        .regex(horaRegex, "La hora debe estar en formato HH:mm"),
+        .regex(horaRegex, "La hora debe estar en formato HH:mm")
+        .optional(),
     modalidad: z
         .enum(["VIRTUAL", "PRESENCIAL"])
         .default("VIRTUAL"),
@@ -37,9 +48,28 @@ export const createCitaSchema = z.object({
         .optional(),
     monto: z
         .number()
-        .positive("El monto debe ser mayor a 0"),
+        .positive("El monto debe ser mayor a 0")
+        .optional(),
 }).refine(
-    (data) => new Date(data.fechaCita) > new Date(data.fechaSolicitada),
+    (data) => {
+        // Validar que al menos uno de los profesionales sea provisto
+        if (!data.perfilProfesionalId && !data.profesionalId) {
+            return false;
+        }
+        return true;
+    },
+    {
+        message: "El profesional es obligatorio",
+        path: ["profesionalId"],
+    }
+).refine(
+    (data) => {
+        // Si ambas fechas son provistas, validar que fechaCita > fechaSolicitada
+        if (data.fechaSolicitada && data.fechaCita) {
+            return new Date(data.fechaCita) > new Date(data.fechaSolicitada);
+        }
+        return true;
+    },
     {
         message: "La fecha de la cita debe ser posterior a la fecha solicitada",
         path: ["fechaCita"],
@@ -47,24 +77,34 @@ export const createCitaSchema = z.object({
 );
 
 export const updateCitaSchema = z.object({
+    clienteId: z
+        .number()
+        .int()
+        .positive("El cliente es obligatorio")
+        .optional(),
     perfilProfesionalId: z
+        .number()
+        .int()
+        .positive("El profesional es obligatorio")
+        .optional(),
+    profesionalId: z
         .number()
         .int()
         .positive("El profesional es obligatorio")
         .optional(),
     fechaSolicitada: z
         .string()
-        .datetime("La fecha solicitada debe ser válida")
         .optional(),
     fechaCita: z
         .string()
-        .datetime("La fecha de la cita debe ser válida")
         .optional(),
     horaInicio: z
         .string()
-        .regex(horaRegex, "La hora debe estar en formato HH:mm")
         .optional(),
     horaFin: z
+        .string()
+        .optional(),
+    hora: z
         .string()
         .regex(horaRegex, "La hora debe estar en formato HH:mm")
         .optional(),
@@ -94,6 +134,7 @@ export const updateCitaSchema = z.object({
         .max(500, "El motivo no puede superar 500 caracteres")
         .optional(),
 });
+
 
 export type CreateCitaDto = z.infer<typeof createCitaSchema>;
 export type UpdateCitaDto = z.infer<typeof updateCitaSchema>;

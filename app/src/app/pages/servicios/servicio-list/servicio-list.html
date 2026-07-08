@@ -18,8 +18,11 @@
         </mat-card-header>
         <mat-card-content>
             <p>{{ servicio.descripcion }}</p>
+            <p><strong>Profesional:</strong> {{ servicio.perfil?.usuario?.nombre }} {{ servicio.perfil?.usuario?.apellidos }}</p>
+            <p><strong>Categoría:</strong> {{ servicio.categoria?.nombre }}</p>
             <p><strong>Duración:</strong> {{ servicio.duracionMinutos }} min</p>
             <p><strong>Modalidad:</strong> {{ servicio.modalidad }}</p>
+            <p><strong>Estado:</strong> {{ servicio.estado ? 'Activo' : 'Inactivo' }}</p>
         </mat-card-content>
         <mat-card-actions>
             <a mat-button [routerLink]="['/servicios', servicio.id]">Ver Detalle</a>

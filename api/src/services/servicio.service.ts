@@ -170,22 +170,22 @@ export const servicioService = {
         return await prisma.servicio.update({
             where: { id },
             data: {
-                nombre: data.nombre,
-                descripcion: data.descripcion,
-                precio: data.precio,
-                duracionMinutos: data.duracionMinutos,
-                modalidad: data.modalidad,
-                estado: data.estado,
-                perfilId: data.perfilId,
-                categoriaId: data.categoriaId,
-                especialidades: data.especialidadIds
-                    ? {
+                ...(data.nombre !== undefined && { nombre: data.nombre }),
+                ...(data.descripcion !== undefined && { descripcion: data.descripcion }),
+                ...(data.precio !== undefined && { precio: data.precio }),
+                ...(data.duracionMinutos !== undefined && { duracionMinutos: data.duracionMinutos }),
+                ...(data.modalidad !== undefined && { modalidad: data.modalidad }),
+                ...(data.estado !== undefined && { estado: data.estado }),
+                ...(data.perfilId !== undefined && { perfilId: data.perfilId }),
+                ...(data.categoriaId !== undefined && { categoriaId: data.categoriaId }),
+                ...(data.especialidadIds && {
+                    especialidades: {
                         deleteMany: {},
                         create: data.especialidadIds.map((id) => ({
                             especialidadId: id,
                         })),
                     }
-                    : undefined,
+                }),
             },
             include: {
                 perfil: true,

@@ -17,7 +17,8 @@
             <mat-card-subtitle>{{ cita.hora }}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <p><strong>Profesional:</strong> {{ cita.profesionalId }}</p>
+            <p><strong>Profesional:</strong> {{ cita.profesional?.usuario?.nombre }} {{ cita.profesional?.usuario?.apellidos }}</p>
+            <p><strong>Cliente:</strong> {{ cita.cliente?.nombre }} {{ cita.cliente?.apellidos }}</p>
             <p><strong>Estado:</strong> <span class="status">{{ cita.estado }}</span></p>
             <p><strong>Modalidad:</strong> {{ cita.modalidad }}</p>
         </mat-card-content>

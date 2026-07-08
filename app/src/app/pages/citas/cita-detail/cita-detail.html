@@ -5,18 +5,20 @@
 <mat-card>
     <mat-card-header>
         <mat-card-title>Detalle de Cita</mat-card-title>
+        <mat-card-subtitle>{{ cita()?.fechaCita | date: 'medium' }} - {{ cita()?.hora }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
         <div class="info">
-            <span><strong>Profesional ID:</strong> {{ cita()?.profesionalId }}</span>
-            <span><strong>Cliente ID:</strong> {{ cita()?.clienteId }}</span>
-            <span><strong>Fecha:</strong> {{ cita()?.fechaCita | date }}</span>
-            <span><strong>Hora:</strong> {{ cita()?.hora }}</span>
-            <span><strong>Estado:</strong> {{ cita()?.estado }}</span>
+            <span><strong>Cliente:</strong> {{ cita()?.cliente?.nombre }} {{ cita()?.cliente?.apellidos }}</span>
+            <span><strong>Profesional:</strong> {{ cita()?.profesional?.usuario?.nombre }} {{ cita()?.profesional?.usuario?.apellidos }}</span>
+            <span><strong>Servicio:</strong> {{ cita()?.servicio?.nombre }}</span>
+            <span><strong>Categoría:</strong> {{ cita()?.servicio?.categoria?.nombre }}</span>
             <span><strong>Modalidad:</strong> {{ cita()?.modalidad }}</span>
+            <span><strong>Estado:</strong> <strong>{{ cita()?.estado }}</strong></span>
         </div>
         @if (cita()?.descripcion) {
         <mat-divider></mat-divider>
+        <h4>Descripción</h4>
         <p>{{ cita()?.descripcion }}</p>
         }
     </mat-card-content>

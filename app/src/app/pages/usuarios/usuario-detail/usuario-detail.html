@@ -1,17 +1,100 @@
-<a mat-stroked-button routerLink="/usuarios"><mat-icon>arrow_back</mat-icon>Volver</a>
-@if (loading()) { <div class="state"><mat-spinner diameter="42" /></div> }
-@else if (error()) { <div class="state error"><mat-icon>error</mat-icon></div> }
-@else if (usuario()) {
-<mat-card>
-    <mat-card-header>
-        <mat-card-title>{{ usuario()?.nombre }}</mat-card-title>
-        <mat-card-subtitle>{{ usuario()?.rol }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-        <div class="info">
-            <span><strong>Email:</strong> {{ usuario()?.email }}</span>
-            <span><strong>Teléfono:</strong> {{ usuario()?.telefono }}</span>
-        </div>
-    </mat-card-content>
-</mat-card>
+<section class="detail-header">
+    <a mat-stroked-button routerLink="/admin/usuarios" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+        Volver
+    </a>
+</section>
+
+@if (loading()) {
+<div class="state">
+    <mat-spinner diameter="42" />
+    <p>Cargando usuario...</p>
+</div>
+} @else if (error()) {
+<div class="state error">
+    <mat-icon>error</mat-icon>
+    <p>{{ error() }}</p>
+</div>
+} @else if (usuario()) {
+<div class="detail-container">
+    <!-- Main Info Card -->
+    <mat-card class="main-card">
+        <mat-card-header class="header-section">
+            <div class="user-info">
+                <h2>{{ usuario()?.nombre }} {{ usuario()?.apellidos }}</h2>
+                <mat-chip [color]="getRolColor(usuario()?.rol!)" selected class="rol-chip">
+                    <mat-icon>person</mat-icon>
+                    {{ usuario()?.rol }}
+                </mat-chip>
+            </div>
+        </mat-card-header>
+
+        <mat-card-content>
+            <!-- Estado Section -->
+            <div class="estado-section">
+                <div class="estado-display">
+                    <span class="label">Estado</span>
+                    <div class="estado-value" [ngClass]="usuario()?.estado ? 'activo' : 'inactivo'">
+                        <mat-icon>{{ usuario()?.estado ? 'check_circle' : 'cancel' }}</mat-icon>
+                        <span>{{ usuario()?.estado ? 'Activo' : 'Inactivo' }}</span>
+                    </div>
+                </div>
+                <button mat-raised-button color="primary" (click)="toggleEstado(usuario()!)" class="toggle-btn">
+                    {{ usuario()?.estado ? 'Desactivar' : 'Activar' }}
+                </button>
+            </div>
+
+            <!-- Contact Info Section -->
+            <mat-divider class="section-divider"></mat-divider>
+            <div class="info-section">
+                <h3>Información de Contacto</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <mat-icon>email</mat-icon>
+                        <div>
+                            <span class="label">Email</span>
+                            <span class="value">{{ usuario()?.email }}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <mat-icon>phone</mat-icon>
+                        <div>
+                            <span class="label">Teléfono</span>
+                            <span class="value">{{ usuario()?.telefono || 'No especificado' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Info Section -->
+            <mat-divider class="section-divider"></mat-divider>
+            <div class="info-section">
+                <h3>Información del Sistema</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <mat-icon>badge</mat-icon>
+                        <div>
+                            <span class="label">ID</span>
+                            <span class="value">#{{ usuario()?.id }}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <mat-icon>calendar_today</mat-icon>
+                        <div>
+                            <span class="label">Creado</span>
+                            <span class="value">{{ usuario()?.createdAt | date: 'short' }}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <mat-icon>update</mat-icon>
+                        <div>
+                            <span class="label">Última Actualización</span>
+                            <span class="value">{{ usuario()?.updatedAt | date: 'short' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
 }

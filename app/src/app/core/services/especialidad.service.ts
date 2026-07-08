@@ -16,4 +16,8 @@ export class EspecialidadService {
   obtenerPorId(id: number) {
     return this.http.get<ApiResponse<Especialidad>>(`${this.apiUrl}/${id}`);
   }
+
+  actualizar(id: number, data: Partial<Especialidad>) {
+    return this.http.put<ApiResponse<Especialidad>>(`${this.apiUrl}/${id}`, data);
+  }
 }

@@ -7,30 +7,52 @@ import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Usuario } from '../../../core/models/usuario.model';
 import { UsuarioService } from '../../../core/services/usuario.service';
+import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-usuario-admin-list',
-  imports: [RouterLink, FormsModule, MatButtonModule, MatIconModule, MatTableModule, MatProgressSpinnerModule, MatFormFieldModule, MatInputModule],
+  imports: [RouterLink, FormsModule, MatButtonModule, MatIconModule, MatTableModule, MatProgressSpinnerModule, MatFormFieldModule, MatInputModule, MatDialogModule],
   templateUrl: './usuario-admin-list.html',
   styleUrl: './usuario-admin-list.css',
 })
 export class UsuarioAdminList {
   private readonly usuarioService = inject(UsuarioService);
+  private readonly dialog = inject(MatDialog);
   usuarios = signal<Usuario[]>([]);
   search = signal('');
+  filtroRol = signal<string | null>(null);
+  filtroEstado = signal<boolean | null>(null);
   loading = signal(false);
   error = signal<string | null>(null);
-  displayedColumns = ['nombre', 'email', 'rol', 'telefono', 'acciones'];
+  displayedColumns = ['id', 'nombre', 'email', 'rol', 'telefono', 'estado', 'acciones'];
+
+  roles = ['ADMIN', 'PROFESIONAL', 'CLIENTE'];
+  estados = [true, false];
+  estadoLabels = { true: 'Activo', false: 'Inactivo' };
 
   usuariosFiltrados = computed(() => {
     const texto = this.search().trim().toLowerCase();
-    if (!texto) return this.usuarios();
+    const rol = this.filtroRol();
+    const estado = this.filtroEstado();
+
     return this.usuarios().filter((u) => {
       const nombre = u.nombre?.toLowerCase() ?? '';
       const email = u.email?.toLowerCase() ?? '';
-      return nombre.includes(texto) || email.includes(texto);
+      const apellidos = u.apellidos?.toLowerCase() ?? '';
+
+      const coincideTexto =
+        texto.length === 0 ||
+        nombre.includes(texto) ||
+        email.includes(texto) ||
+        apellidos.includes(texto);
+
+      const coincideRol = rol === null || u.rol === rol;
+      const coincideEstado = estado === null || u.estado === estado;
+
+      return coincideTexto && coincideRol && coincideEstado;
     });
   });
 
@@ -47,4 +69,40 @@ export class UsuarioAdminList {
   }
 
   clearSearch(): void { this.search.set(''); }
+
+  clearFilters(): void {
+    this.search.set('');
+    this.filtroRol.set(null);
+    this.filtroEstado.set(null);
+  }
+
+  getEstadoLabel(estado: boolean): string {
+    return estado ? 'Activo' : 'Inactivo';
+  }
+
+  toggleEstado(usuario: Usuario): void {
+    const nuevoEstado = !usuario.estado;
+    const accion = nuevoEstado ? 'activar' : 'desactivar';
+    const mensajeConfirmacion = `¿Está seguro de ${accion} a ${usuario.nombre}?`;
+    
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      width: '400px',
+      data: { titulo: `${accion.charAt(0).toUpperCase() + accion.slice(1)} Usuario`, mensaje: mensajeConfirmacion }
+    });
+
+    dialogRef.afterClosed().subscribe((resultado) => {
+      if (resultado) {
+        usuario.estado = nuevoEstado;
+        this.usuarioService.actualizar(usuario.id, { estado: usuario.estado }).subscribe({
+          next: () => {
+            this.loadUsuarios();
+          },
+          error: () => {
+            usuario.estado = !nuevoEstado;
+            console.error('Error al cambiar estado');
+          },
+        });
+      }
+    });
+  }
 }

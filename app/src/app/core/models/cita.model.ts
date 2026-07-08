@@ -1,6 +1,8 @@
 import { Usuario } from './usuario.model';
 import { PerfilProfesional } from './perfil-profesional.model';
 import { CitaHistorial } from './cita-historial.model';
+import { Servicio } from './servicio.model';
+import { Categoria } from './categoria.model';
 
 export enum EstadoCita {
     PENDIENTE = 'PENDIENTE',
@@ -21,6 +23,9 @@ export interface Cita {
     cliente?: Usuario;
     profesionalId: number;
     profesional?: PerfilProfesional;
+    servicioId?: number;
+    servicio?: Servicio;
+    categoria?: Categoria;
     fechaCita: string;
     hora: string;
     estado: EstadoCita;
@@ -35,6 +40,7 @@ export interface Cita {
 export interface CitaCreateDto {
     clienteId: number;
     profesionalId: number;
+    servicioId: number;
     fechaCita: string;
     hora: string;
     estado?: EstadoCita;
@@ -49,11 +55,13 @@ export interface CitaUpdateDto {
     modalidad?: ModalidadCita;
     hora?: string;
     fechaCita?: string;
+    servicioId?: number;
 }
 
 export interface CitaFormModel {
     clienteId: number | null;
     profesionalId: number | null;
+    servicioId: number | null;
     fechaCita: string;
     hora: string;
     modalidad: ModalidadCita | '';

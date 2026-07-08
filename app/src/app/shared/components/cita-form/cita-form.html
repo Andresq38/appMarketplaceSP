@@ -44,7 +44,7 @@
           <!-- Servicio -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Servicio</mat-label>
-            <mat-select>
+            <mat-select [formField]="citaForm.servicioId">
               <mat-option value="">Selecciona un servicio</mat-option>
               @for (servicio of servicios(); track servicio.id) {
                 <mat-option [value]="servicio.id">
@@ -52,6 +52,11 @@
                 </mat-option>
               }
             </mat-select>
+            @if (citaForm.servicioId().touched() && citaForm.servicioId().invalid()) {
+              <mat-error>
+                {{ citaForm.servicioId().errors()[0].message }}
+              </mat-error>
+            }
           </mat-form-field>
 
           <!-- Fecha -->

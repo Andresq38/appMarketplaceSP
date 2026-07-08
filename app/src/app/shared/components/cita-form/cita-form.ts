@@ -62,6 +62,7 @@ export class CitaForm {
   citaModel = signal<CitaFormModel>({
     clienteId: null,
     profesionalId: null,
+    servicioId: null,
     fechaCita: '',
     hora: '',
     modalidad: '',
@@ -86,6 +87,7 @@ export class CitaForm {
       this.citaModel.set({
         clienteId: cita.clienteId ?? null,
         profesionalId: cita.profesionalId ?? null,
+        servicioId: (cita as any).servicioId ?? null,
         fechaCita: cita.fechaCita ? new Date(cita.fechaCita).toISOString().split('T')[0] : '',
         hora: cita.hora ?? '',
         modalidad: cita.modalidad ?? '',
@@ -136,6 +138,10 @@ export class CitaForm {
       message: 'Selecciona un profesional'
     })
 
+    required(path.servicioId, {
+      message: 'Selecciona un servicio'
+    })
+
     required(path.fechaCita, {
       message: 'La fecha es obligatoria'
     })
@@ -163,6 +169,7 @@ export class CitaForm {
     this.citaModel.set({
       clienteId: null,
       profesionalId: null,
+      servicioId: null,
       fechaCita: '',
       hora: '',
       modalidad: '',
@@ -173,6 +180,7 @@ export class CitaForm {
   private marcarCamposComoTocados() {
     this.citaForm.clienteId().markAsTouched();
     this.citaForm.profesionalId().markAsTouched();
+    this.citaForm.servicioId().markAsTouched();
     this.citaForm.fechaCita().markAsTouched();
     this.citaForm.hora().markAsTouched();
     this.citaForm.modalidad().markAsTouched();
@@ -183,6 +191,7 @@ export class CitaForm {
     return (
       this.citaForm.clienteId().invalid() ||
       this.citaForm.profesionalId().invalid() ||
+      this.citaForm.servicioId().invalid() ||
       this.citaForm.fechaCita().invalid() ||
       this.citaForm.hora().invalid() ||
       this.citaForm.modalidad().invalid() ||
@@ -192,13 +201,16 @@ export class CitaForm {
 
   private buildDto(): CitaCreateDto | CitaUpdateDto {
     const value = this.citaModel();
+    
+    // EDIT mode: los DTOs son iguales, solo cambiar nombres de campos al DTO del backend
     return {
       clienteId: value.clienteId as number,
       profesionalId: value.profesionalId as number,
+      servicioId: value.servicioId as number,
       fechaCita: value.fechaCita,
       hora: value.hora,
       modalidad: value.modalidad as ModalidadCita,
-      descripcion: value.descripcion.trim()
+      descripcion: value.descripcion.trim() || undefined
     };
   }
 

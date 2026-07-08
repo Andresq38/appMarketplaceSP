@@ -92,7 +92,7 @@ export class ServicioForm {
         duracionMinutos: servicio.duracionMinutos ?? 0,
         modalidad: servicio.modalidad ?? '',
         estado: servicio.estado ?? true,
-        especialidadIds: servicio.especialidades?.map((item) => item.id) ?? []
+        especialidadIds: servicio.especialidades?.map((item: any) => item.especialidad?.id) ?? []
       });
     });
   }
@@ -163,8 +163,12 @@ export class ServicioForm {
   }
 
   private marcarCamposComoTocados() {
-    this.servicioForm.perfilId().markAsTouched();
-    this.servicioForm.categoriaId().markAsTouched();
+    // En CREATE: marcar perfil y categoría, en EDIT: no (porque no son editables)
+    if (!this.isEdit()) {
+      this.servicioForm.perfilId().markAsTouched();
+      this.servicioForm.categoriaId().markAsTouched();
+    }
+    
     this.servicioForm.nombre().markAsTouched();
     this.servicioForm.descripcion().markAsTouched();
     this.servicioForm.precio().markAsTouched();
@@ -173,9 +177,12 @@ export class ServicioForm {
   }
 
   private formularioInvalido(): boolean {
+    const perfilValido = this.isEdit() ? true : !this.servicioForm.perfilId().invalid();
+    const categoriaValida = this.isEdit() ? true : !this.servicioForm.categoriaId().invalid();
+    
     return (
-      this.servicioForm.perfilId().invalid() ||
-      this.servicioForm.categoriaId().invalid() ||
+      !perfilValido ||
+      !categoriaValida ||
       this.servicioForm.nombre().invalid() ||
       this.servicioForm.descripcion().invalid() ||
       this.servicioForm.precio().invalid() ||
@@ -200,13 +207,29 @@ export class ServicioForm {
 
   private buildDto(): ServicioCreateDto | ServicioUpdateDto {
     const value = this.servicioModel();
+    
+    if (this.isEdit()) {
+      // EDIT mode: no incluir perfilId ni categoriaId
+      return {
+        nombre: value.nombre.trim(),
+        descripcion: value.descripcion.trim(),
+        precio: Number(value.precio),
+        duracionMinutos: Number(value.duracionMinutos),
+        modalidad: value.modalidad as ModalidadServicio,
+        estado: value.estado,
+        especialidadIds: value.especialidadIds
+      };
+    }
+    
+    // CREATE mode: incluir perfilId y categoriaId
     return {
+      perfilId: value.perfilId as number,
+      categoriaId: value.categoriaId as number,
       nombre: value.nombre.trim(),
       descripcion: value.descripcion.trim(),
       precio: Number(value.precio),
       duracionMinutos: Number(value.duracionMinutos),
       modalidad: value.modalidad as ModalidadServicio,
-      estado: value.estado,
       especialidadIds: value.especialidadIds
     };
   }

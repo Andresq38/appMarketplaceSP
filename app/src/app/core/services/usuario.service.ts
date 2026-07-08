@@ -16,4 +16,8 @@ export class UsuarioService {
   obtenerPorId(id: number) {
     return this.http.get<ApiResponse<Usuario>>(`${this.apiUrl}/${id}`);
   }
+
+  actualizar(id: number, data: Partial<Usuario>) {
+    return this.http.put<ApiResponse<Usuario>>(`${this.apiUrl}/${id}`, data);
+  }
 }

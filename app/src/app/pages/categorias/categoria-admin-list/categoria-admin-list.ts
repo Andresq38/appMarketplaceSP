@@ -7,27 +7,47 @@ import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Categoria } from '../../../core/models/categoria.model';
 import { CategoriaService } from '../../../core/services/categoria.service';
+import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-categoria-admin-list',
-  imports: [RouterLink, FormsModule, MatButtonModule, MatIconModule, MatTableModule, MatProgressSpinnerModule, MatFormFieldModule, MatInputModule],
+  imports: [RouterLink, FormsModule, MatButtonModule, MatIconModule, MatTableModule, MatProgressSpinnerModule, MatFormFieldModule, MatInputModule, MatDialogModule],
   templateUrl: './categoria-admin-list.html',
   styleUrl: './categoria-admin-list.css',
 })
 export class CategoriaAdminList {
   private readonly categoriaService = inject(CategoriaService);
+  private readonly dialog = inject(MatDialog);
   categorias = signal<Categoria[]>([]);
   search = signal('');
+  filtroEstado = signal<boolean | null>(null);
   loading = signal(false);
   error = signal<string | null>(null);
-  displayedColumns = ['nombre', 'descripcion', 'acciones'];
+  displayedColumns = ['id', 'nombre', 'descripcion', 'estado', 'acciones'];
+
+  estados = [true, false];
+  estadoLabels = { true: 'Activo', false: 'Inactivo' };
 
   categoriasFiltradas = computed(() => {
     const texto = this.search().trim().toLowerCase();
-    if (!texto) return this.categorias();
-    return this.categorias().filter((c) => c.nombre?.toLowerCase().includes(texto));
+    const estado = this.filtroEstado();
+
+    return this.categorias().filter((c) => {
+      const nombre = c.nombre?.toLowerCase() ?? '';
+      const descripcion = c.descripcion?.toLowerCase() ?? '';
+
+      const coincideTexto =
+        texto.length === 0 ||
+        nombre.includes(texto) ||
+        descripcion.includes(texto);
+
+      const coincideEstado = estado === null || c.estado === estado;
+
+      return coincideTexto && coincideEstado;
+    });
   });
 
   totalCategorias = computed(() => this.categoriasFiltradas().length);
@@ -43,4 +63,39 @@ export class CategoriaAdminList {
   }
 
   clearSearch(): void { this.search.set(''); }
+
+  clearFilters(): void {
+    this.search.set('');
+    this.filtroEstado.set(null);
+  }
+
+  getEstadoLabel(estado: boolean): string {
+    return estado ? 'Activo' : 'Inactivo';
+  }
+
+  toggleEstado(categoria: Categoria): void {
+    const nuevoEstado = !categoria.estado;
+    const accion = nuevoEstado ? 'activar' : 'desactivar';
+    const mensajeConfirmacion = `¿Está seguro de ${accion} la categoría ${categoria.nombre}?`;
+    
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      width: '400px',
+      data: { titulo: `${accion.charAt(0).toUpperCase() + accion.slice(1)} Categoría`, mensaje: mensajeConfirmacion }
+    });
+
+    dialogRef.afterClosed().subscribe((resultado) => {
+      if (resultado) {
+        categoria.estado = nuevoEstado;
+        this.categoriaService.actualizar(categoria.id, { estado: categoria.estado }).subscribe({
+          next: () => {
+            this.loadCategorias();
+          },
+          error: () => {
+            categoria.estado = !nuevoEstado;
+            console.error('Error al cambiar estado');
+          },
+        });
+      }
+    });
+  }
 }

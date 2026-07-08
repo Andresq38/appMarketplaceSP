@@ -2,6 +2,14 @@ import { prisma } from "../config/prisma";
 import { AppError } from "../utils/app-error";
 import { CreatePerfilProfesionalDto, UpdatePerfilProfesionalDto } from "../dtos/perfil-profesional.dto";
 
+// Función helper para transformar la respuesta de Prisma
+function transformarPerfilProfesional(perfil: any) {
+    return {
+        ...perfil,
+        especialidades: perfil.especialidades?.map((pe: any) => pe.especialidad) || [],
+    };
+}
+
 export const perfilProfesionalService = {
     // Utilidades
     async validateUsuario(usuarioId: number) {
@@ -39,7 +47,7 @@ export const perfilProfesionalService = {
     },
 
     async listar() {
-        return await prisma.perfilProfesional.findMany({
+        const perfiles = await prisma.perfilProfesional.findMany({
             include: {
                 usuario: true,
                 servicios: true,
@@ -50,6 +58,7 @@ export const perfilProfesionalService = {
                 },
             },
         });
+        return perfiles.map(transformarPerfilProfesional);
     },
 
     async obtenerPorId(id: number) {
@@ -70,7 +79,7 @@ export const perfilProfesionalService = {
             throw AppError.notFound("Perfil profesional no encontrado");
         }
 
-        return perfil;
+        return transformarPerfilProfesional(perfil);
     },
 
     async obtenerPorUsuarioId(usuarioId: number) {
@@ -91,7 +100,7 @@ export const perfilProfesionalService = {
             throw AppError.notFound("Perfil profesional no encontrado");
         }
 
-        return perfil;
+        return transformarPerfilProfesional(perfil);
     },
 
     async crear(data: CreatePerfilProfesionalDto) {
@@ -111,7 +120,7 @@ export const perfilProfesionalService = {
             throw AppError.conflict("El usuario ya tiene un perfil profesional");
         }
 
-        return await prisma.perfilProfesional.create({
+        const perfil = await prisma.perfilProfesional.create({
             data: {
                 usuarioId: data.usuarioId,
                 titulo: data.titulo,
@@ -143,6 +152,8 @@ export const perfilProfesionalService = {
                 },
             },
         });
+
+        return transformarPerfilProfesional(perfil);
     },
 
     async actualizar(id: number, data: UpdatePerfilProfesionalDto) {
@@ -177,7 +188,7 @@ export const perfilProfesionalService = {
             });
         }
 
-        return await prisma.perfilProfesional.update({
+        perfil = await prisma.perfilProfesional.update({
             where: { id },
             data: {
                 titulo: data.titulo,
@@ -210,6 +221,8 @@ export const perfilProfesionalService = {
                 },
             },
         });
+
+        return transformarPerfilProfesional(perfil);
     },
 
     async eliminar(id: number) {

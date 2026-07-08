@@ -2,6 +2,19 @@ import { prisma } from "../config/prisma";
 import { AppError } from "../utils/app-error";
 import { CreateCitaDto, UpdateCitaDto } from "../dtos/cita.dto";
 
+// Transformer para mapear campos de base de datos al formato del frontend
+const transformCita = (cita: any) => {
+    return {
+        ...cita,
+        profesionalId: cita.perfilProfesionalId,
+        hora: cita.horaInicio,
+    };
+};
+
+const transformCitas = (citas: any[]) => {
+    return citas.map(transformCita);
+};
+
 export const citaService = {
     // Utilidades
     async validateCliente(clienteId: number) {
@@ -35,15 +48,24 @@ export const citaService = {
     },
 
     async listar() {
-        return await prisma.cita.findMany({
+        const citas = await prisma.cita.findMany({
             include: {
                 cliente: true,
-                profesional: true,
-                servicio: true,
+                profesional: {
+                    include: {
+                        usuario: true,
+                    },
+                },
+                servicio: {
+                    include: {
+                        categoria: true,
+                    },
+                },
                 historial: true,
                 resena: true,
             },
         });
+        return transformCitas(citas);
     },
 
     async obtenerPorId(id: number) {
@@ -51,8 +73,16 @@ export const citaService = {
             where: { id },
             include: {
                 cliente: true,
-                profesional: true,
-                servicio: true,
+                profesional: {
+                    include: {
+                        usuario: true,
+                    },
+                },
+                servicio: {
+                    include: {
+                        categoria: true,
+                    },
+                },
                 historial: true,
                 resena: true,
             },
@@ -62,57 +92,98 @@ export const citaService = {
             throw AppError.notFound("Cita no encontrada");
         }
 
-        return cita;
+        return transformCita(cita);
     },
 
     async obtenerPorCliente(clienteId: number) {
         await this.validateCliente(clienteId);
 
-        return await prisma.cita.findMany({
+        const citas = await prisma.cita.findMany({
             where: { clienteId },
             include: {
                 cliente: true,
-                profesional: true,
-                servicio: true,
+                profesional: {
+                    include: {
+                        usuario: true,
+                    },
+                },
+                servicio: {
+                    include: {
+                        categoria: true,
+                    },
+                },
                 historial: true,
                 resena: true,
             },
         });
+        return transformCitas(citas);
     },
 
     async obtenerPorProfesional(perfilProfesionalId: number) {
         await this.validateProfesional(perfilProfesionalId);
 
-        return await prisma.cita.findMany({
+        const citas = await prisma.cita.findMany({
             where: { perfilProfesionalId },
             include: {
                 cliente: true,
-                profesional: true,
-                servicio: true,
+                profesional: {
+                    include: {
+                        usuario: true,
+                    },
+                },
+                servicio: {
+                    include: {
+                        categoria: true,
+                    },
+                },
                 historial: true,
                 resena: true,
             },
         });
+        return transformCitas(citas);
     },
 
     async crear(data: CreateCitaDto) {
+        // Mapear profesionalId a perfilProfesionalId si es necesario
+        const perfilProfesionalId = (data as any).profesionalId || (data as any).perfilProfesionalId;
+        const horaInicio = data.horaInicio || (data as any).hora;
+        const servicioId = (data as any).servicioId;
+
+        // Validar que los campos obligatorios estén presentes
+        if (!data.clienteId) {
+            throw AppError.badRequest("El cliente es obligatorio");
+        }
+        if (!perfilProfesionalId) {
+            throw AppError.badRequest("El profesional es obligatorio");
+        }
+        if (!horaInicio) {
+            throw AppError.badRequest("La hora es obligatoria");
+        }
+        if (!data.fechaCita) {
+            throw AppError.badRequest("La fecha es obligatoria");
+        }
+
         // Validar relaciones
         await this.validateCliente(data.clienteId);
-        await this.validateProfesional(data.perfilProfesionalId);
-        await this.validateServicio(data.servicioId);
+        await this.validateProfesional(perfilProfesionalId);
 
-        return await prisma.cita.create({
+        // Si se proporciona servicioId, validarlo
+        if (servicioId) {
+            await this.validateServicio(servicioId);
+        }
+
+        const cita = await prisma.cita.create({
             data: {
                 clienteId: data.clienteId,
-                perfilProfesionalId: data.perfilProfesionalId,
-                servicioId: data.servicioId,
-                fechaSolicitada: new Date(data.fechaSolicitada),
-                fechaCita: new Date(data.fechaCita),
-                horaInicio: data.horaInicio,
-                horaFin: data.horaFin,
-                modalidad: data.modalidad,
+                perfilProfesionalId,
+                servicioId: servicioId || null,
+                fechaSolicitada: (data as any).fechaSolicitada ? new Date((data as any).fechaSolicitada) : new Date(),
+                fechaCita: data.fechaCita.includes('T') ? new Date(data.fechaCita) : new Date(data.fechaCita + 'T00:00:00'),
+                horaInicio,
+                horaFin: (data as any).horaFin || horaInicio,
+                modalidad: data.modalidad || "VIRTUAL",
                 descripcion: data.descripcion,
-                monto: data.monto,
+                monto: (data as any).monto || 0,
                 estado: "PENDIENTE",
             },
             include: {
@@ -123,35 +194,45 @@ export const citaService = {
                 resena: true,
             },
         });
+        return transformCita(cita);
     },
 
     async actualizar(id: number, data: UpdateCitaDto) {
         // Validar que la cita exista
-        const cita = await prisma.cita.findUnique({
+        const citaExiste = await prisma.cita.findUnique({
             where: { id },
         });
 
-        if (!cita) {
+        if (!citaExiste) {
             throw AppError.notFound("Cita no encontrada");
         }
 
+        // Mapear profesionalId a perfilProfesionalId si es necesario
+        const perfilProfesionalId = (data as any).profesionalId || data.perfilProfesionalId;
+
         // Validar relaciones si se actualizan
-        if (data.perfilProfesionalId) {
-            await this.validateProfesional(data.perfilProfesionalId);
+        if (data.clienteId) {
+            await this.validateCliente(data.clienteId);
         }
 
-        return await prisma.cita.update({
+        if (perfilProfesionalId) {
+            await this.validateProfesional(perfilProfesionalId);
+        }
+
+        const cita = await prisma.cita.update({
             where: { id },
             data: {
-                perfilProfesionalId: data.perfilProfesionalId,
-                fechaCita: data.fechaCita ? new Date(data.fechaCita) : undefined,
-                horaInicio: data.horaInicio,
-                horaFin: data.horaFin,
-                modalidad: data.modalidad,
-                descripcion: data.descripcion,
-                estado: data.estado,
-                comentarioProfesional: data.comentarioProfesional,
-                motivoCancelacion: data.motivoCancelacion,
+                ...(data.clienteId && { clienteId: data.clienteId }),
+                ...(perfilProfesionalId && { perfilProfesionalId }),
+                ...(data.fechaCita && { fechaCita: new Date(data.fechaCita) }),
+                ...(data.hora !== undefined && { horaInicio: data.hora }),
+                ...(data.horaInicio !== undefined && { horaInicio: data.horaInicio }),
+                ...(data.horaFin !== undefined && { horaFin: data.horaFin }),
+                ...(data.modalidad !== undefined && { modalidad: data.modalidad }),
+                ...(data.descripcion !== undefined && { descripcion: data.descripcion }),
+                ...(data.estado !== undefined && { estado: data.estado }),
+                ...(data.comentarioProfesional !== undefined && { comentarioProfesional: data.comentarioProfesional }),
+                ...(data.motivoCancelacion !== undefined && { motivoCancelacion: data.motivoCancelacion }),
             },
             include: {
                 cliente: true,
@@ -161,6 +242,7 @@ export const citaService = {
                 resena: true,
             },
         });
+        return transformCita(cita);
     },
 
     async eliminar(id: number) {

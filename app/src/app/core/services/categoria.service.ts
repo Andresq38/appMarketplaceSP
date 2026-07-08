@@ -16,4 +16,8 @@ export class CategoriaService {
   obtenerPorId(id: number) {
     return this.http.get<ApiResponse<Categoria>>(`${this.apiUrl}/${id}`);
   }
+
+  actualizar(id: number, data: Partial<Categoria>) {
+    return this.http.put<ApiResponse<Categoria>>(`${this.apiUrl}/${id}`, data);
+  }
 }

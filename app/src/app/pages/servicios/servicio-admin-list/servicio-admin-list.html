@@ -8,7 +8,39 @@
         <input matInput [(ngModel)]="search" />
         <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
-    <button mat-stroked-button (click)="clearSearch()">Limpiar</button>
+
+    <div class="categoria-filters">
+        @for (cat of categorias(); track cat.id) {
+        <button mat-stroked-button
+            [color]="filtroCategoria() === cat.id ? 'primary' : ''"
+            (click)="filtroCategoria() === cat.id ? filtroCategoria.set(null) : filtroCategoria.set(cat.id)">
+            {{ cat.nombre }}
+        </button>
+        }
+    </div>
+
+    <div class="modalidad-filters">
+        @for (modalidad of modalidades; track modalidad) {
+        <button mat-stroked-button
+            [color]="filtroModalidad() === modalidad ? 'primary' : ''"
+            (click)="filtroModalidad() === modalidad ? filtroModalidad.set(null) : filtroModalidad.set(modalidad)">
+            {{ modalidad }}
+        </button>
+        }
+    </div>
+
+    <div class="precio-filters">
+        <mat-form-field appearance="outline">
+            <mat-label>Precio Mínimo</mat-label>
+            <input matInput type="number" [(ngModel)]="preciominimo" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Precio Máximo</mat-label>
+            <input matInput type="number" [(ngModel)]="preciomaximo" />
+        </mat-form-field>
+    </div>
+
+    <button mat-stroked-button (click)="clearSearch()">Limpiar Filtros</button>
 </section>
 <p class="summary">{{ totalServicios() }} servicios encontrados</p>
 @if (loading()) { <div class="state"><mat-spinner diameter="42" /></div> }
@@ -16,21 +48,37 @@
 @else {
 <div class="table-wrapper">
     <table mat-table [dataSource]="serviciosFiltrados()" class="admin-table">
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let s">{{ s.id }}</td>
+        </ng-container>
         <ng-container matColumnDef="nombre">
             <th mat-header-cell *matHeaderCellDef>Servicio</th>
             <td mat-cell *matCellDef="let s"><strong>{{ s.nombre }}</strong></td>
+        </ng-container>
+        <ng-container matColumnDef="profesional">
+            <th mat-header-cell *matHeaderCellDef>Profesional</th>
+            <td mat-cell *matCellDef="let s">{{ s.perfil?.usuario?.nombre }} {{ s.perfil?.usuario?.apellidos }}</td>
+        </ng-container>
+        <ng-container matColumnDef="categoria">
+            <th mat-header-cell *matHeaderCellDef>Categoría</th>
+            <td mat-cell *matCellDef="let s">{{ s.categoria?.nombre }}</td>
         </ng-container>
         <ng-container matColumnDef="precio">
             <th mat-header-cell *matHeaderCellDef>Precio</th>
             <td mat-cell *matCellDef="let s">₡{{ s.precio }}</td>
         </ng-container>
-        <ng-container matColumnDef="duracion">
-            <th mat-header-cell *matHeaderCellDef>Duración</th>
-            <td mat-cell *matCellDef="let s">{{ s.duracionMinutos }} min</td>
-        </ng-container>
         <ng-container matColumnDef="modalidad">
             <th mat-header-cell *matHeaderCellDef>Modalidad</th>
             <td mat-cell *matCellDef="let s">{{ s.modalidad }}</td>
+        </ng-container>
+        <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let s">
+                <button mat-stroked-button [color]="s.estado ? 'accent' : 'warn'" (click)="toggleEstado(s)">
+                    {{ s.estado ? 'Activo' : 'Inactivo' }}
+                </button>
+            </td>
         </ng-container>
         <ng-container matColumnDef="acciones">
             <th mat-header-cell *matHeaderCellDef>Acciones</th>

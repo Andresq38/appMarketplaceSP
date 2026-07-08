@@ -7,8 +7,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Especialidad } from '../../../core/models/especialidad.model';
 import { EspecialidadService } from '../../../core/services/especialidad.service';
+import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-especialidad-admin-list',
@@ -21,25 +23,40 @@ import { EspecialidadService } from '../../../core/services/especialidad.service
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
+    MatDialogModule,
   ],
   templateUrl: './especialidad-admin-list.html',
   styleUrl: './especialidad-admin-list.css',
 })
 export class EspecialidadAdminList {
   private readonly especialidadService = inject(EspecialidadService);
+  private readonly dialog = inject(MatDialog);
   especialidades = signal<Especialidad[]>([]);
   search = signal('');
+  filtroEstado = signal<boolean | null>(null);
   loading = signal(false);
   error = signal<string | null>(null);
-  displayedColumns = ['nombre', 'descripcion', 'acciones'];
+  displayedColumns = ['id', 'nombre', 'descripcion', 'estado', 'acciones'];
+
+  estados = [true, false];
+  estadoLabels = { true: 'Activo', false: 'Inactivo' };
 
   especialidadesFiltradas = computed(() => {
     const texto = this.search().trim().toLowerCase();
-    if (!texto) return this.especialidades();
+    const estado = this.filtroEstado();
+
     return this.especialidades().filter((esp) => {
       const nombre = esp.nombre?.toLowerCase() ?? '';
       const descripcion = esp.descripcion?.toLowerCase() ?? '';
-      return nombre.includes(texto) || descripcion.includes(texto);
+
+      const coincideTexto =
+        texto.length === 0 ||
+        nombre.includes(texto) ||
+        descripcion.includes(texto);
+
+      const coincideEstado = estado === null || esp.estado === estado;
+
+      return coincideTexto && coincideEstado;
     });
   });
 
@@ -64,7 +81,42 @@ export class EspecialidadAdminList {
     });
   }
 
+  clearFilters(): void {
+    this.search.set('');
+    this.filtroEstado.set(null);
+  }
+
   clearSearch(): void {
     this.search.set('');
+  }
+
+  getEstadoLabel(estado: boolean): string {
+    return estado ? 'Activo' : 'Inactivo';
+  }
+
+  toggleEstado(especialidad: Especialidad): void {
+    const nuevoEstado = !especialidad.estado;
+    const accion = nuevoEstado ? 'activar' : 'desactivar';
+    const mensajeConfirmacion = `¿Está seguro de ${accion} la especialidad ${especialidad.nombre}?`;
+    
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      width: '400px',
+      data: { titulo: `${accion.charAt(0).toUpperCase() + accion.slice(1)} Especialidad`, mensaje: mensajeConfirmacion }
+    });
+
+    dialogRef.afterClosed().subscribe((resultado) => {
+      if (resultado) {
+        especialidad.estado = nuevoEstado;
+        this.especialidadService.actualizar(especialidad.id, { estado: especialidad.estado }).subscribe({
+          next: () => {
+            this.loadEspecialidades();
+          },
+          error: () => {
+            especialidad.estado = !nuevoEstado;
+            console.error('Error al cambiar estado');
+          },
+        });
+      }
+    });
   }
 }

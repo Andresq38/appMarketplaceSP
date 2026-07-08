@@ -12,7 +12,18 @@
         <input matInput [(ngModel)]="search" placeholder="Nombre o descripción" />
         <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
-    <button mat-stroked-button (click)="clearSearch()">Limpiar</button>
+
+    <div class="estado-filters">
+        @for (estado of estados; track estado) {
+        <button mat-stroked-button
+            [color]="filtroEstado() === estado ? 'primary' : ''"
+            (click)="filtroEstado() === estado ? filtroEstado.set(null) : filtroEstado.set(estado)">
+            {{ getEstadoLabel(estado) }}
+        </button>
+        }
+    </div>
+
+    <button mat-stroked-button (click)="clearFilters()">Limpiar Filtros</button>
 </section>
 
 <p class="summary">{{ totalEspecialidades() }} especialidades encontradas</p>
@@ -24,6 +35,10 @@
 } @else {
 <div class="table-wrapper">
     <table mat-table [dataSource]="especialidadesFiltradas()" class="admin-table">
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let esp">{{ esp.id }}</td>
+        </ng-container>
         <ng-container matColumnDef="nombre">
             <th mat-header-cell *matHeaderCellDef>Especialidad</th>
             <td mat-cell *matCellDef="let esp"><strong>{{ esp.nombre }}</strong></td>
@@ -31,6 +46,14 @@
         <ng-container matColumnDef="descripcion">
             <th mat-header-cell *matHeaderCellDef>Descripción</th>
             <td mat-cell *matCellDef="let esp">{{ esp.descripcion }}</td>
+        </ng-container>
+        <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let e">
+                <button mat-stroked-button [color]="e.estado ? 'accent' : 'warn'" (click)="toggleEstado(e)">
+                    {{ getEstadoLabel(e.estado) }}
+                </button>
+            </td>
         </ng-container>
         <ng-container matColumnDef="acciones">
             <th mat-header-cell *matHeaderCellDef>Acciones</th>

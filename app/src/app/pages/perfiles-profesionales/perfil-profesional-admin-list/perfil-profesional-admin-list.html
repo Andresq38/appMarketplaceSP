@@ -18,8 +18,28 @@
         <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
 
+    <div class="modalidad-filters">
+        @for (modalidad of modalidades; track modalidad) {
+        <button mat-stroked-button
+            [color]="filtroModalidad() === modalidad ? 'primary' : ''"
+            (click)="filtroModalidad() === modalidad ? filtroModalidad.set(null) : filtroModalidad.set(modalidad)">
+            {{ modalidad }}
+        </button>
+        }
+    </div>
+
+    <div class="disponibilidad-filters">
+        @for (disponibilidad of disponibilidades; track disponibilidad) {
+        <button mat-stroked-button
+            [color]="filtroDisponibilidad() === disponibilidad ? 'primary' : ''"
+            (click)="filtroDisponibilidad() === disponibilidad ? filtroDisponibilidad.set(null) : filtroDisponibilidad.set(disponibilidad)">
+            {{ getDisponibilidadLabel(disponibilidad) }}
+        </button>
+        }
+    </div>
+
     <button mat-stroked-button class="secondary-button" (click)="clearSearch()">
-        Limpiar
+        Limpiar Filtros
     </button>
 </section>
 
@@ -40,6 +60,11 @@
 } @else {
 <div class="table-wrapper">
     <table mat-table [dataSource]="perfilesFiltrados()" class="admin-table">
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let perfil">{{ perfil.id }}</td>
+        </ng-container>
+
         <ng-container matColumnDef="imagen">
             <th mat-header-cell *matHeaderCellDef>Foto</th>
             <td mat-cell *matCellDef="let perfil">
@@ -95,6 +120,15 @@
             <th mat-header-cell *matHeaderCellDef>Tarifa Base</th>
             <td mat-cell *matCellDef="let perfil">
                 ₡{{ perfil.tarifaBase }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="disponibilidad">
+            <th mat-header-cell *matHeaderCellDef>Disponibilidad</th>
+            <td mat-cell *matCellDef="let perfil">
+                <button mat-stroked-button [color]="perfil.disponible ? 'accent' : 'warn'" (click)="toggleDisponible(perfil)">
+                    {{ getDisponibilidadLabel(perfil.disponible) }}
+                </button>
             </td>
         </ng-container>
 

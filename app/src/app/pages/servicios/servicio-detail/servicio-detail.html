@@ -5,15 +5,27 @@
 <mat-card>
     <mat-card-header>
         <mat-card-title>{{ servicio()?.nombre }}</mat-card-title>
+        <mat-card-subtitle>₡{{ servicio()?.precio }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
         <p>{{ servicio()?.descripcion }}</p>
         <mat-divider></mat-divider>
         <div class="info">
-            <span><strong>Precio:</strong> ₡{{ servicio()?.precio }}</span>
+            <span><strong>Profesional:</strong> {{ servicio()?.perfil?.usuario?.nombre }} {{ servicio()?.perfil?.usuario?.apellidos }}</span>
+            <span><strong>Categoría:</strong> {{ servicio()?.categoria?.nombre }}</span>
             <span><strong>Duración:</strong> {{ servicio()?.duracionMinutos }} min</span>
             <span><strong>Modalidad:</strong> {{ servicio()?.modalidad }}</span>
+            <span><strong>Estado:</strong> {{ servicio()?.estado ? 'Activo' : 'Inactivo' }}</span>
         </div>
+        @if (servicio()?.especialidades?.length ?? 0 > 0) {
+        <mat-divider></mat-divider>
+        <h4>Especialidades</h4>
+        <div class="especialidades-list">
+            @for (esp of servicio()?.especialidades; track esp.id) {
+                <span class="badge">{{ esp.nombre }}</span>
+            }
+        </div>
+        }
     </mat-card-content>
 </mat-card>
 }
