@@ -1,4 +1,4 @@
-<a mat-stroked-button routerLink="/categorias"><mat-icon>arrow_back</mat-icon>Volver</a>
+<a mat-stroked-button [routerLink]="backLink()"><mat-icon>arrow_back</mat-icon>Volver</a>
 @if (loading()) { <div class="state"><mat-spinner diameter="42" /></div> }
 @else if (error()) { <div class="state error"><mat-icon>error</mat-icon></div> }
 @else if (categoria()) {

@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -20,8 +20,11 @@ export class ServicioDetailPage implements OnInit {
   servicio = signal<Servicio | null>(null);
   loading = signal(false);
   error = signal<string | null>(null);
+  fromAdmin = signal(false);
+  backLink = computed(() => this.fromAdmin() ? '/admin/servicios' : '/servicios');
 
   ngOnInit(): void {
+    this.fromAdmin.set(this.route.snapshot.queryParamMap.get('from') === 'admin');
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!id) { this.error.set('ID inválido.'); return; }
     this.loadServicio(id);

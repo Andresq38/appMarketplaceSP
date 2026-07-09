@@ -1,40 +1,29 @@
 <section class="hero glass-card">
     <div class="hero-content">
-        <span class="eyebrow">Angular + API REST</span>
         <h1>HealthHub</h1>
         <p>
-            Gestionar servicios de salud, citas,
-            especialidades, profesionales y usuarios del sistema.
+            Plataforma de servicios profesionales de salud, gestión de citas, especialidades y usuarios del sistema.
         </p>
-        <div class="hero-actions">
-            <button mat-flat-button class="secondary-button" routerLink="/perfiles-profesionales">
-                Ver Profesionales
-            </button>
-            <button mat-flat-button class="secondary-button" routerLink="/servicios">
-                Ver servicios
-            </button>
-            <button mat-flat-button class="tertiary-button" routerLink="/especialidades">
-                Ver especialidades
-            </button>
-        </div>
+        <nav class="hero-nav">
+            <a routerLink="/perfiles-profesionales" class="nav-link">
+                <mat-icon>people</mat-icon>
+                Profesionales
+            </a>
+            <a routerLink="/servicios" class="nav-link">
+                <mat-icon>local_hospital</mat-icon>
+                Servicios
+            </a>
+            <a routerLink="/especialidades" class="nav-link">
+                <mat-icon>medical_services</mat-icon>
+                Especialidades
+            </a>
+            <a routerLink="/citas" class="nav-link">
+                <mat-icon>event_note</mat-icon>
+                Citas
+            </a>
+        </nav>
     </div>
     <div class="hero-visual">
         <mat-icon>medical_services</mat-icon>
     </div>
-</section>
-
-<section class="summary-grid">
-    @for (card of cards(); track card.title) {
-    <mat-card class="dashboard-card glass-card">
-        <mat-card-header>
-            <div class="card-icon">
-                <mat-icon>{{ card.icon }}</mat-icon>
-            </div>
-            <h2>{{ card.title }}</h2>
-        </mat-card-header>
-        <mat-card-content>
-            <p>{{ card.description }}</p>
-        </mat-card-content>
-    </mat-card>
-    }
 </section>
