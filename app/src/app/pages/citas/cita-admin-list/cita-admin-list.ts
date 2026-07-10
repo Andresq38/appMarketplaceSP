@@ -30,7 +30,7 @@ export class CitaAdminList {
   error = signal<string | null>(null);
   displayedColumns = ['id', 'profesional', 'cliente', 'servicio', 'fecha', 'hora', 'estado', 'acciones'];
 
-  estados = ['PENDIENTE', 'COMPLETADA', 'CANCELADA'];
+  estados = ['PENDIENTE', 'ACEPTADA', 'RECHAZADA', 'COMPLETADA', 'CANCELADA'];
   profesionales = computed(() => {
     const profs = new Map<number, { id: number; nombre: string; apellidos: string }>();
     this.citas().forEach(c => {
@@ -68,10 +68,23 @@ export class CitaAdminList {
       const coincideEstado = estado === null || c.estado === estado;
       const coincideProfesional = profId === null || c.profesional?.id === profId;
 
-      const fechaCita = c.fechaCita ? new Date(c.fechaCita).toISOString().split('T')[0] : '';
-      const coincideFecha = 
-        (fechaDesde === null || !fechaDesde || fechaCita >= fechaDesde) &&
-        (fechaHasta === null || !fechaHasta || fechaCita <= fechaHasta);
+      // Filtro de fechas mejorado - comparar solo la parte de la fecha (YYYY-MM-DD)
+      let coincideFecha = true;
+      if (c.fechaCita && (fechaDesde || fechaHasta)) {
+        const citaDate = new Date(c.fechaCita);
+        // Obtener la fecha local sin timezone issues
+        const year = citaDate.getFullYear();
+        const month = String(citaDate.getMonth() + 1).padStart(2, '0');
+        const day = String(citaDate.getDate()).padStart(2, '0');
+        const citaDateStr = `${year}-${month}-${day}`;
+        
+        if (fechaDesde) {
+          coincideFecha = coincideFecha && citaDateStr >= fechaDesde;
+        }
+        if (fechaHasta) {
+          coincideFecha = coincideFecha && citaDateStr <= fechaHasta;
+        }
+      }
 
       return coincideTexto && coincideEstado && coincideProfesional && coincideFecha;
     });
