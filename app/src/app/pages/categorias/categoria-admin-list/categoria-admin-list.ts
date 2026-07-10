@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Categoria } from '../../../core/models/categoria.model';
 import { CategoriaService } from '../../../core/services/categoria.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
@@ -21,6 +22,7 @@ import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm
 export class CategoriaAdminList {
   private readonly categoriaService = inject(CategoriaService);
   private readonly dialog = inject(MatDialog);
+  private readonly notificationService = inject(NotificationService);
   categorias = signal<Categoria[]>([]);
   search = signal('');
   filtroEstado = signal<boolean | null>(null);
@@ -88,6 +90,7 @@ export class CategoriaAdminList {
         categoria.estado = nuevoEstado;
         this.categoriaService.actualizar(categoria.id, { estado: categoria.estado }).subscribe({
           next: () => {
+            this.notificationService.success('Estado actualizado correctamente', 'Categoría');
             this.loadCategorias();
           },
           error: () => {

@@ -69,27 +69,27 @@ export class MainLayout {
 
   loginAsCliente(): void {
     this.currentUser.set({
-      nombre: 'Juan',
-      apellidos: 'García López',
-      email: 'cliente@demo.com',
+      nombre: 'Cecilia',
+      apellidos: 'Molina Mena',
+      email: 'cecialiamolina@gmail.com',
       role: 'CLIENTE',
     });
   }
 
   loginAsProfesional(): void {
     this.currentUser.set({
-      nombre: 'Dra. María',
-      apellidos: 'Rodríguez Pérez',
-      email: 'profesional@demo.com',
+      nombre: 'Patricia',
+      apellidos: 'Molina',
+      email: 'patriciamolina@gmail.com',
       role: 'PROFESIONAL',
     });
   }
 
   loginAsAdmin(): void {
     this.currentUser.set({
-      nombre: 'Admin',
-      apellidos: 'Sistema',
-      email: 'admin@demo.com',
+      nombre: 'Andres',
+      apellidos: 'Quesada Molina',
+      email: 'andresquesada@gmail.com',
       role: 'ADMIN',
     });
   }

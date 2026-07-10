@@ -41,7 +41,11 @@ export const servicioService = {
     async listar() {
         return await prisma.servicio.findMany({
             include: {
-                perfil: true,
+                perfil: {
+                    include: {
+                        usuario: true,
+                    },
+                },
                 categoria: true,
                 especialidades: {
                     include: {
@@ -56,7 +60,11 @@ export const servicioService = {
         const servicio = await prisma.servicio.findUnique({
             where: { id },
             include: {
-                perfil: true,
+                perfil: {
+                    include: {
+                        usuario: true,
+                    },
+                },
                 categoria: true,
                 especialidades: {
                     include: {
@@ -77,7 +85,11 @@ export const servicioService = {
         return await prisma.servicio.findMany({
             where: { perfilId },
             include: {
-                perfil: true,
+                perfil: {
+                    include: {
+                        usuario: true,
+                    },
+                },
                 categoria: true,
                 especialidades: {
                     include: {
@@ -92,7 +104,11 @@ export const servicioService = {
         return await prisma.servicio.findMany({
             where: { categoriaId },
             include: {
-                perfil: true,
+                perfil: {
+                    include: {
+                        usuario: true,
+                    },
+                },
                 categoria: true,
                 especialidades: {
                     include: {
@@ -131,7 +147,11 @@ export const servicioService = {
                     : undefined,
             },
             include: {
-                perfil: true,
+                perfil: {
+                    include: {
+                        usuario: true,
+                    },
+                },
                 categoria: true,
                 especialidades: {
                     include: {

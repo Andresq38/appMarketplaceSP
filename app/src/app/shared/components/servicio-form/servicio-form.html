@@ -6,58 +6,40 @@
         <h3 class="section-title">Información del Servicio</h3>
         <div class="form-grid">
           <!-- Profesional -->
-          @if (isEdit()) {
-            <div class="read-only-field">
-              <label>Profesional</label>
-              <div class="read-only-value">
-                {{ servicio()?.perfil?.usuario?.nombre }} {{ servicio()?.perfil?.usuario?.apellidos }}
-              </div>
-            </div>
-          } @else {
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Profesional</mat-label>
-              <mat-select [formField]="servicioForm.perfilId">
-                <mat-option value="">Selecciona un profesional</mat-option>
-                @for (perfil of perfiles(); track perfil.id) {
-                  <mat-option [value]="perfil.id">
-                    {{ perfil.usuario?.nombre }} {{ perfil.usuario?.apellidos }}
-                  </mat-option>
-                }
-              </mat-select>
-              @if (servicioForm.perfilId().touched() && servicioForm.perfilId().invalid()) {
-                <mat-error>
-                  {{ servicioForm.perfilId().errors()[0].message }}
-                </mat-error>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Profesional</mat-label>
+            <mat-select [(ngModel)]="servicioModel().perfilId" name="perfil">
+              <mat-option [value]="null">Selecciona un profesional</mat-option>
+              @for (perfil of perfiles(); track perfil.id) {
+                <mat-option [value]="perfil.id">
+                  {{ perfil.usuario?.nombre }} {{ perfil.usuario?.apellidos }}
+                </mat-option>
               }
-            </mat-form-field>
-          }
+            </mat-select>
+            @if (servicioForm.perfilId().touched() && servicioForm.perfilId().invalid()) {
+              <mat-error>
+                {{ servicioForm.perfilId().errors()[0].message }}
+              </mat-error>
+            }
+          </mat-form-field>
 
           <!-- Categoría -->
-          @if (isEdit()) {
-            <div class="read-only-field">
-              <label>Categoría</label>
-              <div class="read-only-value">
-                {{ servicio()?.categoria?.nombre }}
-              </div>
-            </div>
-          } @else {
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Categoría</mat-label>
-              <mat-select [formField]="servicioForm.categoriaId">
-                <mat-option value="">Selecciona una categoría</mat-option>
-                @for (categoria of categorias(); track categoria.id) {
-                  <mat-option [value]="categoria.id">
-                    {{ categoria.nombre }}
-                  </mat-option>
-                }
-              </mat-select>
-              @if (servicioForm.categoriaId().touched() && servicioForm.categoriaId().invalid()) {
-                <mat-error>
-                  {{ servicioForm.categoriaId().errors()[0].message }}
-                </mat-error>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Categoría</mat-label>
+            <mat-select [(ngModel)]="servicioModel().categoriaId" name="categoria">
+              <mat-option [value]="null">Selecciona una categoría</mat-option>
+              @for (categoria of categorias(); track categoria.id) {
+                <mat-option [value]="categoria.id">
+                  {{ categoria.nombre }}
+                </mat-option>
               }
-            </mat-form-field>
-          }
+            </mat-select>
+            @if (servicioForm.categoriaId().touched() && servicioForm.categoriaId().invalid()) {
+              <mat-error>
+                {{ servicioForm.categoriaId().errors()[0].message }}
+              </mat-error>
+            }
+          </mat-form-field>
 
           <!-- Nombre -->
           <mat-form-field appearance="outline" class="full-width">

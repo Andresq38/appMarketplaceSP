@@ -8,3 +8,4 @@
 .admin-table th { font-weight: 700; color: var(--mat-sys-primary); background: color-mix(in srgb, var(--mat-sys-primary) 8%, transparent); }
 .admin-table td, .admin-table th { padding: 0.85rem 1rem; }
 .state { min-height: 260px; display: grid; place-items: center; }
+.actions-cell { display: flex; gap: 0.5rem; align-items: center; }

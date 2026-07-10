@@ -7,6 +7,7 @@ import {
   signal
 } from '@angular/core';
 import { CommonModule } from '@angular/common'
+import { FormsModule } from '@angular/forms'
 import {
   FormField,
   form,
@@ -41,6 +42,7 @@ import { Categoria } from '../../../core/models/categoria.model'
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     FormField,
     MatCardModule,
     MatFormFieldModule,
@@ -92,7 +94,9 @@ export class ServicioForm {
         duracionMinutos: servicio.duracionMinutos ?? 0,
         modalidad: servicio.modalidad ?? '',
         estado: servicio.estado ?? true,
-        especialidadIds: servicio.especialidades?.map((item: any) => item.id) ?? []
+        especialidadIds: (servicio.especialidades && servicio.especialidades.length > 0)
+          ? servicio.especialidades.map((item: any) => item.especialidadId ?? item.id)
+          : []
       });
     });
   }

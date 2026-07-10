@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Especialidad } from '../../../core/models/especialidad.model';
 import { EspecialidadService } from '../../../core/services/especialidad.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
@@ -31,6 +32,7 @@ import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm
 export class EspecialidadAdminList {
   private readonly especialidadService = inject(EspecialidadService);
   private readonly dialog = inject(MatDialog);
+  private readonly notificationService = inject(NotificationService);
   especialidades = signal<Especialidad[]>([]);
   search = signal('');
   filtroEstado = signal<boolean | null>(null);
@@ -109,6 +111,7 @@ export class EspecialidadAdminList {
         especialidad.estado = nuevoEstado;
         this.especialidadService.actualizar(especialidad.id, { estado: especialidad.estado }).subscribe({
           next: () => {
+            this.notificationService.success('Estado actualizado correctamente', 'Especialidad');
             this.loadEspecialidades();
           },
           error: () => {

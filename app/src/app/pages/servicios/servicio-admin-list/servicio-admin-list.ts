@@ -8,13 +8,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Servicio } from '../../../core/models/servicio.model';
 import { ServicioService } from '../../../core/services/servicio.service';
+import { NotificationService } from '../../../core/services/notification.service';
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-servicio-admin-list',
-  imports: [RouterLink, FormsModule, MatButtonModule, MatIconModule, MatTableModule, MatProgressSpinnerModule, MatFormFieldModule, MatInputModule, MatDialogModule],
+  imports: [RouterLink, FormsModule, MatButtonModule, MatIconModule, MatTableModule, MatProgressSpinnerModule, MatFormFieldModule, MatInputModule, MatDialogModule, MatTooltipModule],
   templateUrl: './servicio-admin-list.html',
   styleUrl: './servicio-admin-list.css',
 })
@@ -22,6 +24,7 @@ export class ServicioAdminList {
   private readonly servicioService = inject(ServicioService);
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
+  private readonly notificationService = inject(NotificationService);
   servicios = signal<Servicio[]>([]);
   search = signal('');
   filtroCategoria = signal<number | null>(null);
@@ -113,6 +116,7 @@ export class ServicioAdminList {
         servicio.estado = nuevoEstado;
         this.servicioService.actualizar(servicio.id, { estado: servicio.estado }).subscribe({
           next: () => {
+            this.notificationService.success('Estado actualizado correctamente', 'Servicio');
             this.loadServicios();
           },
           error: () => {

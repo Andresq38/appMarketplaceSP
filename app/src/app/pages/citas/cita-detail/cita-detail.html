@@ -2,24 +2,67 @@
 @if (loading()) { <div class="state"><mat-spinner diameter="42" /></div> }
 @else if (error()) { <div class="state error"><mat-icon>error</mat-icon></div> }
 @else if (cita()) {
-<mat-card>
-    <mat-card-header>
+<mat-card class="cita-card">
+    <mat-card-header class="cita-header">
         <mat-card-title>Detalle de Cita</mat-card-title>
-        <mat-card-subtitle>{{ cita()?.fechaCita | date: 'medium' }} - {{ cita()?.hora }}</mat-card-subtitle>
+        <mat-card-subtitle>{{ cita()?.fechaCita | date: 'mediumDate' }} - {{ cita()?.hora }}</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        <div class="info">
-            <span><strong>Cliente:</strong> {{ cita()?.cliente?.nombre }} {{ cita()?.cliente?.apellidos }}</span>
-            <span><strong>Profesional:</strong> {{ cita()?.profesional?.usuario?.nombre }} {{ cita()?.profesional?.usuario?.apellidos }}</span>
-            <span><strong>Servicio:</strong> {{ cita()?.servicio?.nombre }}</span>
-            <span><strong>Categoría:</strong> {{ cita()?.servicio?.categoria?.nombre }}</span>
-            <span><strong>Modalidad:</strong> {{ cita()?.modalidad }}</span>
-            <span><strong>Estado:</strong> <strong>{{ cita()?.estado }}</strong></span>
+        <!-- Información Principal -->
+        <div class="info-section">
+            <h4 class="section-label">Información General</h4>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">Cliente</span>
+                    <span class="value">{{ cita()?.cliente?.nombre }} {{ cita()?.cliente?.apellidos }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Profesional</span>
+                    <span class="value">{{ cita()?.profesional?.usuario?.nombre }} {{ cita()?.profesional?.usuario?.apellidos }}</span>
+                </div>
+            </div>
         </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Servicios y Modalidad -->
+        <div class="info-section">
+            <h4 class="section-label">Servicio</h4>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">Nombre del Servicio</span>
+                    <span class="value">{{ cita()?.servicio?.nombre }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Categoría</span>
+                    <span class="value">{{ cita()?.servicio?.categoria?.nombre }}</span>
+                </div>
+            </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Detalles de la Cita -->
+        <div class="info-section">
+            <h4 class="section-label">Detalles</h4>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">Modalidad</span>
+                    <span class="value badge" [ngClass]="'badge-' + cita()?.modalidad?.toLowerCase()">{{ cita()?.modalidad }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Estado</span>
+                    <span class="value badge" [ngClass]="'badge-' + cita()?.estado?.toLowerCase()">{{ cita()?.estado }}</span>
+                </div>
+            </div>
+        </div>
+
         @if (cita()?.descripcion) {
         <mat-divider></mat-divider>
-        <h4>Descripción</h4>
-        <p>{{ cita()?.descripcion }}</p>
+        <div class="info-section">
+            <h4 class="section-label">Descripción</h4>
+            <p class="description-text">{{ cita()?.descripcion }}</p>
+        </div>
         }
     </mat-card-content>
 </mat-card>

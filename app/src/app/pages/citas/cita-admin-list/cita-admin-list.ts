@@ -28,7 +28,7 @@ export class CitaAdminList {
   filtroFechaHasta = signal<string | null>(null);
   loading = signal(false);
   error = signal<string | null>(null);
-  displayedColumns = ['id', 'profesional', 'cliente', 'fecha', 'estado', 'acciones'];
+  displayedColumns = ['id', 'profesional', 'cliente', 'servicio', 'fecha', 'hora', 'estado', 'acciones'];
 
   estados = ['PENDIENTE', 'COMPLETADA', 'CANCELADA'];
   profesionales = computed(() => {

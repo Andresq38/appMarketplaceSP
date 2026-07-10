@@ -82,10 +82,10 @@
         </ng-container>
         <ng-container matColumnDef="acciones">
             <th mat-header-cell *matHeaderCellDef>Acciones</th>
-            <td mat-cell *matCellDef="let s">
-                <a mat-stroked-button color="primary" [routerLink]="['/servicios', s.id]" [queryParams]="{ from: 'admin' }">Ver</a>
-                <button mat-stroked-button color="accent" (click)="editarServicio(s.id)">Editar</button>
-                <button mat-stroked-button color="primary">Eliminar</button>
+            <td mat-cell *matCellDef="let s" class="actions-cell">
+                <a mat-icon-button matTooltip="Ver" color="primary" [routerLink]="['/servicios', s.id]" [queryParams]="{ from: 'admin' }"><mat-icon>visibility</mat-icon></a>
+                <button mat-icon-button matTooltip="Editar" color="accent" (click)="editarServicio(s.id)"><mat-icon>edit</mat-icon></button>
+                <button mat-icon-button matTooltip="Eliminar" color="warn"><mat-icon>delete</mat-icon></button>
             </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
